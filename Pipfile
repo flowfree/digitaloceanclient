@@ -4,12 +4,12 @@ url = "https://pypi.org/simple"
 verify_ssl = true
 
 [dev-packages]
+pytest = "*"
+responses = "*"
 
 [packages]
 requests = "*"
-pytest = "*"
 jsonpickle = "*"
-responses = "*"
 
 [requires]
 python_version = "3.7"
