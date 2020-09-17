@@ -1,3 +1,8 @@
+import json 
+
+import jsonpickle 
+
+
 class Image(object):
     TYPE_SNAPSHOT = 'snapshot'
     TYPE_BACKUP = 'backup'
@@ -53,3 +58,10 @@ class Image(object):
     # A string containing information about errors that may occur 
     # when importing a custom image
     error_message = ''
+
+    @staticmethod
+    def from_json(d):
+        if type(d) != dict:
+            d = json.loads(d)
+        d['py/object'] = 'digitaloceanclient.models.Image'
+        return jsonpickle.decode(json.dumps(d))
