@@ -54,5 +54,6 @@ working/
 .idea/
 .vendors/
 .vscode/
+.env
 env
 venv
