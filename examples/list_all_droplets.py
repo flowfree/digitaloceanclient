@@ -1,9 +1,13 @@
 import os
 from digitaloceanclient import DigitalOceanClient
 
+"""
+List all of your droplets.
+"""
 
 access_token = os.getenv('ACCESS_TOKEN')
 do = DigitalOceanClient(access_token)
+
 for droplet in do.droplets.all():
     print(f'ID = {droplet.id}')
     print(f'Name = {droplet.name}')
