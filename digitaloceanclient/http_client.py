@@ -12,5 +12,9 @@ class HttpClient(object):
     def _request(self, method, path):
         url = urljoin(self.base_url, path)
         f = getattr(requests, method.lower())
-        r = f(url, headers={'Authorization': f'Bearer {self.access_token}'})
+        headers = {
+            'Authorization': f'Bearer {self.access_token}',
+            'Content-Type': 'application/json',
+        }
+        r = f(url, headers=headers)
         return r.json()
