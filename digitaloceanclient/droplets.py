@@ -5,9 +5,6 @@ from .models import Droplet
 
 
 class Droplets(HttpClient):
-    def __init__(self, access_token):
-        self.access_token = access_token
-
     def all(self):
         response = self._request('GET', 'droplets')
         for row in response.get('droplets', []):
