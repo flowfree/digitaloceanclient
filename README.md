@@ -1,3 +1,3 @@
 DigitalOcean Client
 ===================
-The unofficial DigitalOcean REST API client.
+The unofficial Python wrapper for the DigitalOcean REST API client.
