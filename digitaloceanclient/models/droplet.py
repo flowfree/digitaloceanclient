@@ -87,7 +87,9 @@ class Droplet(object):
         if type(d) != dict:
             d = json.loads(d)
         d['py/object'] = 'digitaloceanclient.models.Droplet'
-        d['kernel']['py/object'] = 'digitaloceanclient.models.Kernel'
-        d['image']['py/object'] = 'digitaloceanclient.models.Image'
-        d['region']['py/object'] = 'digitaloceanclient.models.Region'
+        for attrib in ['kernel', 'image', 'region']:
+            try:
+                d[attrib]['py/object'] = f'digitaloceanclient.models.{attrib.title()}'
+            except (KeyError, TypeError):
+                pass
         return jsonpickle.decode(json.dumps(d))
