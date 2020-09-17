@@ -18,3 +18,19 @@ def test_list_all_droplets(client, load_json):
 
     assert responses.calls[0].request.url == 'https://api.digitalocean.com/v2/droplets'
     assert responses.calls[0].request.headers['Authorization'] == 'Bearer TEST_TOKEN'
+
+
+@responses.activate
+def test_get_droplet(client, load_json):
+    responses.add(
+        responses.GET,
+        'https://api.digitalocean.com/v2/droplets/1111111',
+        json=load_json('single_droplet.json')
+    )
+
+    droplet = client.droplets.get('1111111')
+
+    assert droplet.id == 1111111
+    assert droplet.name == 'ubuntu-18-server'
+    assert droplet.memory == 1024
+    assert droplet.vcpus == 1
