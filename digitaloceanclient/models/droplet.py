@@ -1,4 +1,14 @@
+import json 
+
+import jsonpickle
+
+
 class Droplet(object):
+    STATUS_NEW = 'new'
+    STATUS_ACTIVE = 'active'
+    STATUS_OFF = 'off'
+    STATUS_ARCHIVE = 'archive'
+
     # Unique identifier for the droplet instance
     # This will be automatically generated upon droplet creation
     id = None
@@ -68,5 +78,16 @@ class Droplet(object):
     # A string specifying the UUID of the VPC to which the Droplet is assigned.
     vpc_uuid = ''
 
+
     def __str__(self):
         return self.name
+
+    @staticmethod
+    def from_json(d):
+        if type(d) != dict:
+            d = json.loads(d)
+        d['py/object'] = 'digitaloceanclient.models.Droplet'
+        d['kernel']['py/object'] = 'digitaloceanclient.models.Kernel'
+        d['image']['py/object'] = 'digitaloceanclient.models.Image'
+        d['region']['py/object'] = 'digitaloceanclient.models.Region'
+        return jsonpickle.decode(json.dumps(d))
