@@ -3,7 +3,7 @@ from urllib.parse import urljoin
 import requests
 
 from .exceptions import (
-    NotFound, ServerError, Unauthorized
+    NotFound, RateLimitExceeded, ServerError, Unauthorized
 )
 
 
@@ -22,10 +22,22 @@ class HttpClient(object):
         }
         r = f(url, headers=headers)
         jsondata = r.json()
-        if r.status_code == 401:
+
+        if r.status_code == 200:
+            # HTTP 200 - Ok
+            return jsondata         
+        elif r.status_code == 204:
+            # HTTP 204 - No Content
+            return 
+        elif r.status_code == 401:
+            # HTTP 401 - Unauthorized
             raise Unauthorized(jsondata.get('message'))
         elif r.status_code == 404:
+            # HTTP 404 - Not Found
             raise NotFound(jsondata.get('message'))
+        elif r.status_code == 429:
+            # HTTP 429 - Too Many Requests
+            raise RateLimitExceeded(jsondata.get('message'))
         elif r.status_code >= 500:
+            # HTTP 500 - Internal Server Error
             raise ServerError(jsondata.get('message'))
-        return jsondata

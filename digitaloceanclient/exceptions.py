@@ -10,3 +10,8 @@ class NotFound(Exception):
 class ServerError(Exception):
     """HTTP 5xx Error"""
     pass
+
+
+class RateLimitExceeded(Exception):
+    """HTTP 429 Error"""
+    pass

@@ -45,3 +45,18 @@ def test_server_error(client):
         _ = client.account.get()
 
     assert str(e.value) == 'Internal server error.'
+
+
+@responses.activate
+def test_rate_limit_exceeded(client):
+    responses.add(
+        responses.GET,
+        'https://api.digitalocean.com/v2/account',
+        json={'id': 'too_many_requests', 'message': 'API Rate limit exceeded.'},
+        status=429,
+    )
+
+    with pytest.raises(client.RateLimitExceeded) as e:
+        _ = client.account.get()
+
+    assert str(e.value) == 'API Rate limit exceeded.'
