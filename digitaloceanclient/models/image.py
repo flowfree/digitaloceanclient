@@ -65,3 +65,6 @@ class Image(object):
             d = json.loads(d)
         d['py/object'] = 'digitaloceanclient.models.Image'
         return jsonpickle.decode(json.dumps(d))
+
+    def __str__(self):
+        return self.slug
