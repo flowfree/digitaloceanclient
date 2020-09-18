@@ -5,10 +5,7 @@ from .models import Droplet
 
 
 class Droplets(HttpClient):
-    def all(self):
-        response = self._request('GET', 'droplets')
-        for row in response.get('droplets', []):
-            yield Droplet.from_json(row)
+    model = Droplet
 
     def get(self, droplet_id):
         response = self._request('GET', f'droplets/{droplet_id}')

@@ -13,6 +13,18 @@ class HttpClient(object):
     def __init__(self, access_token):
         self.access_token = access_token
 
+    def all(self):
+        resource_name = self.__class__.__name__.lower()
+        next_url = resource_name
+        while True:
+            response = self._request('GET', next_url)
+            for row in response.get(resource_name, []):
+                yield self.model.from_json(row)
+            try:
+                next_url = response['links']['pages']['next']
+            except KeyError:
+                break
+
     def _request(self, method, path):
         url = urljoin(self.base_url, path)
         f = getattr(requests, method.lower())
