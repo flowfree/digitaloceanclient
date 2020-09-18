@@ -2,7 +2,9 @@ from urllib.parse import urljoin
 
 import requests
 
-from .exceptions import Unauthorized
+from .exceptions import (
+    Unauthorized, NotFound
+)
 
 
 class HttpClient(object):
@@ -22,4 +24,6 @@ class HttpClient(object):
         jsondata = r.json()
         if r.status_code == 401:
             raise Unauthorized(jsondata.get('message'))
+        elif r.status_code == 404:
+            raise NotFound(jsondata.get('message'))
         return jsondata
