@@ -14,7 +14,7 @@ def test_unauthorized(client):
     with pytest.raises(client.Unauthorized) as e:
         account = client.account.get()
 
-    assert f'{e.value}' == 'Unable to authenticate you'
+    assert str(e.value) == 'Unable to authenticate you'
 
 
 @responses.activate

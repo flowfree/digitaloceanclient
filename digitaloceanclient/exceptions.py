@@ -1,4 +1,5 @@
 class Unauthorized(Exception):
+    slug = 'xxx'
     status_code = 401
 
 
