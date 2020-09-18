@@ -2,6 +2,8 @@ from urllib.parse import urljoin
 
 import requests
 
+from .exceptions import Unauthorized
+
 
 class HttpClient(object):
     base_url = 'https://api.digitalocean.com/v2/'
@@ -17,4 +19,7 @@ class HttpClient(object):
             'Content-Type': 'application/json',
         }
         r = f(url, headers=headers)
-        return r.json()
+        jsondata = r.json()
+        if r.status_code == 401:
+            raise Unauthorized(jsondata.get('message'))
+        return jsondata
