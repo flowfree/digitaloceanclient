@@ -1,0 +1,12 @@
+{
+  "account": {
+    "droplet_limit": 25,
+    "email": "nash@example.com",
+    "email_verified": true,
+    "floating_ip_limit": 3,
+    "status": "active",
+    "status_message": "",
+    "uuid": "c2b5a91622fbc5a2489c068eb6e53490c10baaf7",
+    "volume_limit": 100
+  }
+}
