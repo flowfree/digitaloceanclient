@@ -1,15 +1,18 @@
-class Unauthorized(Exception):
-    slug = 'xxx'
+class APIError(Exception):
+    status_code = None
+
+
+class Unauthorized(APIError):
     status_code = 401
 
 
-class NotFound(Exception):
+class NotFound(APIError):
     status_code = 404
 
 
-class ServerError(Exception):
+class ServerError(APIError):
     status_code = 500
 
 
-class RateLimitExceeded(Exception):
+class RateLimitExceeded(APIError):
     status_code = 429
