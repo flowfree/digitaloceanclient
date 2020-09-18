@@ -1,17 +1,14 @@
 class Unauthorized(Exception):
-    """HTTP 401 Error"""
-    pass
+    status_code = 401
+
 
 class NotFound(Exception):
-    """HTTP 404 Error"""
-    pass
+    status_code = 404
 
 
 class ServerError(Exception):
-    """HTTP 5xx Error"""
-    pass
+    status_code = 500
 
 
 class RateLimitExceeded(Exception):
-    """HTTP 429 Error"""
-    pass
+    status_code = 429
