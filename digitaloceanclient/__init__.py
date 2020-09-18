@@ -1,7 +1,7 @@
 from .account import Account
 from .droplets import Droplets 
 from .exceptions import (
-    Unauthorized, NotFound
+    NotFound, ServerError, Unauthorized
 )
 from .images import Images
 from .regions import Regions
@@ -20,6 +20,7 @@ class DigitalOceanClient(object):
         self.sizes = Sizes(access_token)
 
         # Exceptions
-        self.Unauthorized = Unauthorized
         self.NotFound = NotFound
+        self.ServerError = ServerError
+        self.Unauthorized = Unauthorized
 

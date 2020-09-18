@@ -31,3 +31,17 @@ def test_not_found(client):
 
     assert str(e.value) == 'The resource you were accessing could not be found.'
 
+
+@responses.activate
+def test_server_error(client):
+    responses.add(
+        responses.GET,
+        'https://api.digitalocean.com/v2/account',
+        json={'id': 'server_error', 'message': 'Internal server error.'},
+        status=500,
+    )
+
+    with pytest.raises(client.ServerError) as e:
+        _ = client.account.get()
+
+    assert str(e.value) == 'Internal server error.'
