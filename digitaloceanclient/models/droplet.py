@@ -1,9 +1,10 @@
-import json 
+from . import Model
+from .kernel import Kernel
+from .image import Image
+from .region import Region
 
-import jsonpickle
 
-
-class Droplet(object):
+class Droplet(Model):
     STATUS_NEW = 'new'
     STATUS_ACTIVE = 'active'
     STATUS_OFF = 'off'
@@ -78,18 +79,11 @@ class Droplet(object):
     # A string specifying the UUID of the VPC to which the Droplet is assigned.
     vpc_uuid = ''
 
-
-    def __str__(self):
-        return self.name
-
-    @staticmethod
-    def from_json(d):
-        if type(d) != dict:
-            d = json.loads(d)
-        d['py/object'] = 'digitaloceanclient.models.Droplet'
-        for attrib in ['kernel', 'image', 'region']:
+    def __init__(self, data):
+        super().__init__(data)
+        classes = {'kernel': Kernel, 'image': Image, 'region': Region}
+        for attrib, class_ in classes.items():
             try:
-                d[attrib]['py/object'] = f'digitaloceanclient.models.{attrib.title()}'
-            except (KeyError, TypeError):
-                pass
-        return jsonpickle.decode(json.dumps(d))
+                setattr(self, attrib, class_(data[attrib]))
+            except KeyError:
+                setattr(self, attrib, None)

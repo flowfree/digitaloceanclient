@@ -4,7 +4,7 @@ from digitaloceanclient.models import Droplet
 def test_populate_model_from_json(load_json):
     data = load_json('single_droplet.json')
 
-    droplet = Droplet.from_json(data['droplet'])
+    droplet = Droplet(data['droplet'])
 
     assert droplet.id == 1111111
     assert droplet.name == 'ubuntu-18-server'

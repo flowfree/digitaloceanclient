@@ -19,7 +19,7 @@ class HttpClient(object):
         while True:
             response = self._request('GET', next_url)
             for row in response.get(resource_name, []):
-                yield self.model.from_json(row)
+                yield self.model(row)
             try:
                 next_url = response['links']['pages']['next']
             except KeyError:

@@ -19,7 +19,7 @@ def test_load_from_json():
         "error_message": ""
     }
 
-    image = Image.from_json(data)
+    image = Image(data)
 
     assert image.id == 7555620
     assert image.name == 'Nifty New Snapshot'

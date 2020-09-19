@@ -1,9 +1,7 @@
-import json  
-
-import jsonpickle
+from . import Model
 
 
-class Account(object):
+class Account(Model):
     STATUS_ACTIVE = 'active'
     STATUS_WARNING = 'warning'
     STATUS_LOCKED = 'locked'
@@ -31,13 +29,3 @@ class Account(object):
 
     # A human-readable message giving more details about the status of the account
     status_message = ''
-
-    @staticmethod
-    def from_json(d):
-        if type(d) != dict:
-            d = json.loads(d)
-        d['py/object'] = 'digitaloceanclient.models.Account'
-        return jsonpickle.decode(json.dumps(d))
-
-    def __str__(self):
-        return self.email

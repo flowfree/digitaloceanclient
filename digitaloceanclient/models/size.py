@@ -1,9 +1,7 @@
-import json 
-
-import jsonpickle
+from . import Model
 
 
-class Size(object):
+class Size(Model):
     # Human-readable string as the identifier of the Size
     slug = ''
 
@@ -32,13 +30,3 @@ class Size(object):
 
     # Whether new Droplets can be created with this size
     available = False
-
-    @staticmethod
-    def from_json(d):
-        if type(d) != dict:
-            d = json.loads(d)
-        d['py/object'] = 'digitaloceanclient.models.Size'
-        return jsonpickle.decode(json.dumps(d))
-
-    def __str__(self):
-        return self.name

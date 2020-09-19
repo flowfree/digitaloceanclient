@@ -13,7 +13,7 @@ def test_load_from_json():
         "status_message": ""
     }
 
-    account = Account.from_json(data)
+    account = Account(data)
 
     assert account.uuid == 'b6fr89dbf6d9156cace5f3c78dc9851d957381ef'
     assert account.email == 'sammy@digitalocean.com'

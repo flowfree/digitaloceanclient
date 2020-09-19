@@ -2,8 +2,10 @@ import json
 
 import jsonpickle
 
+from . import Model
 
-class Region(object):
+
+class Region(Model):
     # The Region unique identifier
     slug = ''
 
@@ -19,13 +21,3 @@ class Region(object):
 
     # An array which contains features available in this region
     features = []
-
-    @staticmethod
-    def from_json(d):
-        if type(d) != dict:
-            d = json.loads(d)
-        d['py/object'] = 'digitaloceanclient.models.Region'
-        return jsonpickle.decode(json.dumps(d))
-
-    def __str__(self):
-        return self.name

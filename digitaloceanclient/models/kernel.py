@@ -1,4 +1,7 @@
-class Kernel(object):
+from . import Model 
+
+
+class Kernel(Model):
     # Kernel unique identifier
     id = ''
 

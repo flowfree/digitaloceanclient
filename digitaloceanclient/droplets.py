@@ -10,5 +10,5 @@ class Droplets(HttpClient):
     def get(self, droplet_id):
         response = self._request('GET', f'droplets/{droplet_id}')
         data = response.get('droplet', {})
-        return Droplet.from_json(data)
+        return self.model(data)
 
