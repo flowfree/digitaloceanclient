@@ -12,7 +12,7 @@ def test_unauthorized(client):
     )
 
     with pytest.raises(client.Unauthorized) as e:
-        account = client.account.get()
+        _ = client.account.info()
 
     assert str(e.value) == 'Unable to authenticate you'
 
@@ -42,7 +42,7 @@ def test_server_error(client):
     )
 
     with pytest.raises(client.ServerError) as e:
-        _ = client.account.get()
+        _ = client.account.info()
 
     assert str(e.value) == 'Internal server error.'
 
@@ -57,6 +57,6 @@ def test_rate_limit_exceeded(client):
     )
 
     with pytest.raises(client.RateLimitExceeded) as e:
-        _ = client.account.get()
+        _ = client.account.info()
 
     assert str(e.value) == 'API Rate limit exceeded.'

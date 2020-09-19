@@ -9,7 +9,7 @@ def test_get_current_account(client, load_json):
         json=load_json('account.json')
     )
 
-    account = client.account.get()
+    account = client.account.info()
 
     assert account.uuid == 'c2b5a91622fbc5a2489c068eb6e53490c10baaf7'
     assert account.email == 'nash@example.com'

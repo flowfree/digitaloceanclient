@@ -4,7 +4,7 @@ from .models import Account as AccountModel
 
 
 class Account(HttpClient):
-    def get(self):
+    def info(self):
         response = self._request('GET', 'account')
         data = response.get('account')
         return AccountModel(data)
