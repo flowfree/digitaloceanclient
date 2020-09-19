@@ -1,5 +1,3 @@
-import json 
-
 from .http_client import HttpClient
 from .models import Droplet
 
