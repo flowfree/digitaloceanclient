@@ -30,3 +30,4 @@ from .image import Image
 from .kernel import Kernel
 from .region import Region
 from .size import Size
+from .volume import Volume
