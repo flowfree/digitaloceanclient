@@ -22,6 +22,7 @@ class Model(object):
 
 
 from .account import Account
+from .action import Action
 from .droplet import Droplet
 from .image import Image
 from .kernel import Kernel
