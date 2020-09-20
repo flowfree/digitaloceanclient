@@ -35,6 +35,7 @@ from .droplet_action import DropletAction
 from .floating_ip import FloatingIP
 from .floating_ip_action import FloatingIPAction
 from .image import Image
+from .image_action import ImageAction
 from .kernel import Kernel
 from .region import Region
 from .size import Size
