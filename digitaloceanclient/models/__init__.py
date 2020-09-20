@@ -28,6 +28,7 @@ from .billing_history import BillingHistory
 from .cdn_endpoint import CDNEndpoint
 from .certificate import Certificate
 from .database import Database
+from .domain import Domain
 from .droplet import Droplet
 from .image import Image
 from .kernel import Kernel
