@@ -29,6 +29,7 @@ from .cdn_endpoint import CDNEndpoint
 from .certificate import Certificate
 from .database import Database
 from .domain import Domain
+from .domain_record import DomainRecord
 from .droplet import Droplet
 from .image import Image
 from .kernel import Kernel
