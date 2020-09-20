@@ -33,6 +33,7 @@ from .domain_record import DomainRecord
 from .droplet import Droplet
 from .droplet_action import DropletAction
 from .floating_ip import FloatingIP
+from .floating_ip_action import FloatingIPAction
 from .image import Image
 from .kernel import Kernel
 from .region import Region
