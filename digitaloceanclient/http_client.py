@@ -13,11 +13,11 @@ class HttpClient(object):
     def __init__(self, access_token):
         self.access_token = access_token
 
-    def all(self):
+    def all(self, params=None):
         resource_name = self.__class__.__name__.lower()
         next_url = resource_name
         while True:
-            response = self._request('GET', next_url)
+            response = self._request('GET', next_url, params)
             for row in response.get(resource_name, []):
                 yield self.model(row)
             try:
@@ -25,14 +25,14 @@ class HttpClient(object):
             except KeyError:
                 break
 
-    def _request(self, method, path):
+    def _request(self, method, path, params=None):
         url = urljoin(self.base_url, path)
         f = getattr(requests, method.lower())
         headers = {
             'Authorization': f'Bearer {self.access_token}',
             'Content-Type': 'application/json',
         }
-        r = f(url, headers=headers)
+        r = f(url, headers=headers, params=params)
         jsondata = r.json()
 
         if r.status_code == 200:
