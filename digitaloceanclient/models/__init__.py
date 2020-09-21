@@ -39,4 +39,5 @@ from .image_action import ImageAction
 from .kernel import Kernel
 from .region import Region
 from .size import Size
+from .snapshot import Snapshot
 from .volume import Volume
