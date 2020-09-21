@@ -40,4 +40,5 @@ from .kernel import Kernel
 from .region import Region
 from .size import Size
 from .snapshot import Snapshot
+from .ssh_key import SSHKey
 from .volume import Volume
