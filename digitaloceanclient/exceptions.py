@@ -16,3 +16,7 @@ class ServerError(APIError):
 
 class RateLimitExceeded(APIError):
     status_code = 429
+
+
+class MalformedResponse(APIError):
+    pass
