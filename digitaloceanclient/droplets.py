@@ -1,5 +1,6 @@
 from .http_client import HttpClient
 from .models import Action, Droplet
+from .exceptions import MalformedResponse
 
 
 class Droplets(HttpClient):
@@ -29,11 +30,11 @@ class Droplets(HttpClient):
             'tags': tags,
         }
         response = self._request('POST', 'droplets', payload=payload)
-        droplet_dict = response.get('droplet', {})
-        try:
-            action_dict = {'id': response['links']['actions'][0]['id']}
-            action = Action(action_dict)
-        except (KeyError, IndexError):
-            action = None
 
-        return self.model(droplet_dict), action
+        try:
+            droplet = self.model(response['droplet'])
+            action = Action({'id': response['links']['actions'][0]['id']})
+        except (KeyError, TypeError, IndexError):
+            raise MalformedResponse('Invalid JSON response.')
+
+        return droplet, action
