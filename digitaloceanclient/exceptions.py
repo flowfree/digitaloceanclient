@@ -2,6 +2,10 @@ class APIError(Exception):
     status_code = None
 
 
+class BadRequest(APIError):
+    status_code = 400
+
+
 class Unauthorized(APIError):
     status_code = 401
 

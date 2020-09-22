@@ -2,7 +2,7 @@ from .account import Account
 from .actions import Actions
 from .droplets import Droplets 
 from .exceptions import (
-    APIError, MalformedResponse, NotFound, RateLimitExceeded, 
+    APIError, BadRequest, MalformedResponse, NotFound, RateLimitExceeded, 
     ServerError, Unauthorized
 )
 from .images import Images
@@ -26,6 +26,7 @@ class DigitalOceanClient(object):
 
         # Exceptions
         self.APIError = APIError
+        self.BadRequest = BadRequest
         self.MalformedResponse = MalformedResponse
         self.NotFound = NotFound
         self.RateLimitExceeded = RateLimitExceeded

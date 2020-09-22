@@ -18,6 +18,20 @@ def test_unauthorized(client):
 
 
 @responses.activate
+def test_bad_request(client):
+    responses.add(
+        responses.POST,
+        'https://api.digitalocean.com/v2/droplets',
+        json={'id': 'bad_request', 'message': 'Your request body was malformed.'},
+        status=400,
+    )
+
+    with pytest.raises(client.BadRequest) as e:
+        client.droplets.create('aaa', 'bbb', 'ccc', 'ddd')
+    assert str(e.value) == 'Your request body was malformed.'
+
+
+@responses.activate
 def test_not_found(client):
     responses.add(
         responses.GET,

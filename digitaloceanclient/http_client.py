@@ -3,7 +3,7 @@ from urllib.parse import urljoin
 import requests
 
 from .exceptions import (
-    APIError, MalformedResponse, NotFound, RateLimitExceeded, 
+    APIError, BadRequest, MalformedResponse, NotFound, RateLimitExceeded, 
     ServerError, Unauthorized
 )
 
@@ -26,14 +26,14 @@ class HttpClient(object):
             except KeyError:
                 break
 
-    def _request(self, method, path, params=None):
+    def _request(self, method, path, params=None, payload=None):
         url = urljoin(self.base_url, path)
         f = getattr(requests, method.lower())
         headers = {
             'Authorization': f'Bearer {self.access_token}',
             'Content-Type': 'application/json',
         }
-        r = f(url, headers=headers, params=params)
+        r = f(url, headers=headers, params=params, json=payload)
         try:
             jsondata = r.json()
         except Exception:
@@ -46,6 +46,9 @@ class HttpClient(object):
         elif r.status_code == 204:
             # HTTP 204 - No Content
             return 
+        elif r.status_code == 400:
+            # HTTP 400 - Bad Request
+            raise BadRequest(jsondata.get('message'))
         elif r.status_code == 401:
             # HTTP 401 - Unauthorized
             raise Unauthorized(jsondata.get('message'))
