@@ -3,7 +3,6 @@ import time
 import os
 
 from digitaloceanclient import DigitalOceanClient
-from digitaloceanclient.models import Image
 
 
 def get_user_input(message, items):
@@ -70,3 +69,5 @@ try:
             break
 except do.APIError as e:
     print(f'\nHTTP {e.status_code} - {e}')
+
+print(f'Droplet ID = {droplet.id}')

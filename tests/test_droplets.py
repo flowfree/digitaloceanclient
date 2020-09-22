@@ -60,3 +60,19 @@ def test_create_new_droplet(client, load_json):
     assert droplet.status == json_response['droplet']['status']
     assert droplet.size_slug == json_response['droplet']['size_slug']
     assert action.id == json_response['links']['actions'][0]['id']
+
+
+@responses.activate
+def test_delete_droplet(client):
+    responses.add(
+        responses.DELETE,
+        'https://api.digitalocean.com/v2/droplets/1234567',
+        body='',
+        status=204,
+    )
+
+    response = client.droplets.delete('1234567')
+
+    assert responses.calls[0].request.method == 'DELETE'
+    assert responses.calls[0].request.url == 'https://api.digitalocean.com/v2/droplets/1234567'
+    assert response == None

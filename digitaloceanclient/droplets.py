@@ -38,3 +38,6 @@ class Droplets(HttpClient):
             raise MalformedResponse('Invalid JSON response.')
 
         return droplet, action
+
+    def delete(self, droplet_id):
+        self._request('DELETE', f'droplets/{droplet_id}')
