@@ -3,7 +3,7 @@ from .actions import Actions
 from .droplets import Droplets 
 from .exceptions import (
     APIError, BadRequest, MalformedResponse, NotFound, RateLimitExceeded, 
-    ServerError, Unauthorized
+    ServerError, Unauthorized, UnprocessableEntity
 )
 from .images import Images
 from .regions import Regions
@@ -32,3 +32,4 @@ class DigitalOceanClient(object):
         self.RateLimitExceeded = RateLimitExceeded
         self.ServerError = ServerError
         self.Unauthorized = Unauthorized
+        self.UnprocessableEntity = UnprocessableEntity

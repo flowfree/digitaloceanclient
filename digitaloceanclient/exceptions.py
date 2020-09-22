@@ -25,6 +25,10 @@ class NotFound(APIError):
     status_code = 404
 
 
+class UnprocessableEntity(APIError):
+    status_code = 422
+
+
 class ServerError(APIError):
     status_code = 500
 

@@ -4,7 +4,7 @@ import requests
 
 from .exceptions import (
     APIError, BadRequest, MalformedResponse, NotFound, RateLimitExceeded, 
-    ServerError, Unauthorized
+    ServerError, Unauthorized, UnprocessableEntity
 )
 
 
@@ -40,10 +40,11 @@ class HttpClient(object):
             except Exception:
                 raise MalformedResponse('Invalid JSON response')
 
-        if r.status_code in [200, 202]:
+        if r.status_code in [200, 201, 202]:
             # HTTP 200 - Ok
+            # HTTP 201 - Created
             # HTTP 202 - Accepted
-            return r.json()         
+            return jsondata
         elif r.status_code == 204:
             # HTTP 204 - No Content
             return 
@@ -57,6 +58,9 @@ class HttpClient(object):
         elif r.status_code == 404:
             # HTTP 404 - Not Found
             raise NotFound(error_message)
+        elif r.status_code == 422:
+            # HTTP 422 - Unprocessable Entity
+            raise UnprocessableEntity(error_message)
         elif r.status_code == 429:
             # HTTP 429 - Too Many Requests
             raise RateLimitExceeded(error_message)
