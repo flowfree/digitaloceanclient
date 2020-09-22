@@ -34,34 +34,34 @@ class HttpClient(object):
             'Content-Type': 'application/json',
         }
         r = f(url, headers=headers, params=params, json=payload)
-        try:
-            jsondata = r.json()
-        except Exception:
-            raise MalformedResponse('Invalid JSON response')
+        if r.status_code != 204:
+            try:
+                jsondata = r.json()
+            except Exception:
+                raise MalformedResponse('Invalid JSON response')
 
         if r.status_code in [200, 202]:
             # HTTP 200 - Ok
             # HTTP 202 - Accepted
-            return jsondata         
+            return r.json()         
         elif r.status_code == 204:
             # HTTP 204 - No Content
             return 
-        elif r.status_code == 400:
+        error_message = jsondata.get('message', 'Unknown error')
+        if r.status_code == 400:
             # HTTP 400 - Bad Request
-            raise BadRequest(jsondata.get('message'))
+            raise BadRequest(error_message)
         elif r.status_code == 401:
             # HTTP 401 - Unauthorized
-            raise Unauthorized(jsondata.get('message'))
+            raise Unauthorized(error_message)
         elif r.status_code == 404:
             # HTTP 404 - Not Found
-            raise NotFound(jsondata.get('message'))
+            raise NotFound(error_message)
         elif r.status_code == 429:
             # HTTP 429 - Too Many Requests
-            raise RateLimitExceeded(jsondata.get('message'))
+            raise RateLimitExceeded(error_message)
         elif r.status_code >= 500:
             # HTTP 500 - Internal Server Error
-            raise ServerError(jsondata.get('message'))
+            raise ServerError(error_message)
         else:
-            api_error = APIError(jsondata.get('message', 'Unknown error'))
-            api_error.status_code = r.status_code
-            raise api_error
+            raise APIError(error_message, r.status_code)

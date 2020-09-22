@@ -14,7 +14,7 @@ def test_unauthorized(client):
     with pytest.raises(client.Unauthorized) as e:
         _ = client.account.info()
 
-    assert str(e.value) == 'Unable to authenticate you'
+    assert str(e.value) == 'Unauthorized: Unable to authenticate you'
 
 
 @responses.activate
@@ -28,7 +28,7 @@ def test_bad_request(client):
 
     with pytest.raises(client.BadRequest) as e:
         client.droplets.create('aaa', 'bbb', 'ccc', 'ddd')
-    assert str(e.value) == 'Your request body was malformed.'
+    assert str(e.value) == 'BadRequest: Your request body was malformed.'
 
 
 @responses.activate
@@ -43,7 +43,7 @@ def test_not_found(client):
     with pytest.raises(client.NotFound) as e:
         _ = client.droplets.get(12345)
 
-    assert str(e.value) == 'The resource you were accessing could not be found.'
+    assert str(e.value) == 'NotFound: The resource you were accessing could not be found.'
 
 
 @responses.activate
@@ -58,7 +58,7 @@ def test_server_error(client):
     with pytest.raises(client.ServerError) as e:
         _ = client.account.info()
 
-    assert str(e.value) == 'Internal server error.'
+    assert str(e.value) == 'ServerError: Internal server error.'
 
 
 @responses.activate
@@ -73,4 +73,4 @@ def test_rate_limit_exceeded(client):
     with pytest.raises(client.RateLimitExceeded) as e:
         _ = client.account.info()
 
-    assert str(e.value) == 'API Rate limit exceeded.'
+    assert str(e.value) == 'RateLimitExceeded: API Rate limit exceeded.'
