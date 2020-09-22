@@ -3,7 +3,8 @@ from urllib.parse import urljoin
 import requests
 
 from .exceptions import (
-    NotFound, RateLimitExceeded, ServerError, Unauthorized
+    APIError, MalformedResponse, NotFound, RateLimitExceeded, 
+    ServerError, Unauthorized
 )
 
 
@@ -33,10 +34,14 @@ class HttpClient(object):
             'Content-Type': 'application/json',
         }
         r = f(url, headers=headers, params=params)
-        jsondata = r.json()
+        try:
+            jsondata = r.json()
+        except Exception:
+            raise MalformedResponse('Invalid JSON response')
 
-        if r.status_code == 200:
+        if r.status_code in [200, 202]:
             # HTTP 200 - Ok
+            # HTTP 202 - Accepted
             return jsondata         
         elif r.status_code == 204:
             # HTTP 204 - No Content
@@ -53,3 +58,5 @@ class HttpClient(object):
         elif r.status_code >= 500:
             # HTTP 500 - Internal Server Error
             raise ServerError(jsondata.get('message'))
+        else:
+            raise APIError(jsondata.get('message', 'Unknown error'))
