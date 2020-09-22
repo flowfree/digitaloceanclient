@@ -34,3 +34,29 @@ def test_get_droplet(client, load_json):
     assert droplet.name == 'ubuntu-18-server'
     assert droplet.memory == 1024
     assert droplet.vcpus == 1
+
+
+@responses.activate
+def test_create_new_droplet(client, load_json):
+    json_response = load_json('create_new_droplet.json')
+
+    responses.add(
+        responses.POST,
+        'https://api.digitalocean.com/v2/droplets',
+        json=json_response
+    )
+
+    droplet, action = client.droplets.create('test-droplet',        # Droplet name
+                                             'ubuntu-20-04-x64',    # Image slug
+                                             's-1vcpu-1gb',         # Size slug
+                                             'nyc1')                # Region slug
+
+    assert droplet.id == json_response['droplet']['id']
+    assert droplet.name == json_response['droplet']['name']
+    assert droplet.memory == json_response['droplet']['memory']
+    assert droplet.vcpus == json_response['droplet']['vcpus']
+    assert droplet.disk == json_response['droplet']['disk']
+    assert droplet.locked == json_response['droplet']['locked']
+    assert droplet.status == json_response['droplet']['status']
+    assert droplet.size_slug == json_response['droplet']['size_slug']
+    assert action.id == json_response['links']['actions'][0]['id']
