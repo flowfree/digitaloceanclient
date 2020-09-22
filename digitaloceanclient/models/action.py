@@ -41,4 +41,19 @@ class Action(Model):
 
     def __init__(self, data):
         super().__init__(data)
-        self.region = Region(data['region'])
+        try:
+            self.region = Region(data['region'])
+        except (KeyError, TypeError):
+            pass
+
+    def all(self, *args, **kwargs):
+        raise NotImplementedError
+
+    def is_in_progress(self):
+        return self.status == self.STATUS_IN_PROGRESS
+    
+    def is_completed(self):
+        return self.status == self.STATUS_COMPLETED
+
+    def is_errored(self):
+        return self.status == self.STATUS_ERRORED

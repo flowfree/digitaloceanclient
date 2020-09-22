@@ -3,6 +3,9 @@ import json
 
 class Model(object):
     def __init__(self, data):
+        self.from_json(data)
+
+    def from_json(self, data):
         if type(data) != dict:
             data = json.loads(data)
         for key, val in data.items():

@@ -60,3 +60,5 @@ def test_load_from_json(load_json):
     assert action.region.features == data['region']['features']
     assert action.region.available == data['region']['available']
     assert action.region_slug == data['region_slug']
+
+    assert action.is_completed()
