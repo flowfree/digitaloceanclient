@@ -23,3 +23,20 @@ def test_get_all_keys(client, load_json):
     assert key.fingerprint == json_response['ssh_keys'][1]['fingerprint']
     assert key.public_key == json_response['ssh_keys'][1]['public_key']
     assert key.name == json_response['ssh_keys'][1]['name']
+
+
+@responses.activate
+def test_get_single_key(client, load_json):
+    json_response = load_json('single_ssh_key.json')
+    responses.add(
+        responses.GET,
+        'https://api.digitalocean.com/v2/account/keys/512190',
+        json=json_response
+    )
+
+    key = client.ssh_keys.get('512190')
+
+    assert key.id == json_response['ssh_key']['id']
+    assert key.fingerprint == json_response['ssh_key']['fingerprint']
+    assert key.public_key == json_response['ssh_key']['public_key']
+    assert key.name == json_response['ssh_key']['name']
