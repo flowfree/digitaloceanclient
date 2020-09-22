@@ -62,4 +62,6 @@ class HttpClient(object):
             # HTTP 500 - Internal Server Error
             raise ServerError(jsondata.get('message'))
         else:
-            raise APIError(jsondata.get('message', 'Unknown error'))
+            api_error = APIError(jsondata.get('message', 'Unknown error'))
+            api_error.status_code = r.status_code
+            raise api_error

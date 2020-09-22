@@ -85,5 +85,5 @@ class Droplet(Model):
         for attrib, class_ in classes.items():
             try:
                 setattr(self, attrib, class_(data[attrib]))
-            except KeyError:
+            except (KeyError, TypeError):
                 setattr(self, attrib, None)
