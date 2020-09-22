@@ -17,3 +17,6 @@ class Region(Model):
 
     # An array which contains features available in this region
     features = []
+
+    def __str__(self):
+        return self.name

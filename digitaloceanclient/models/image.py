@@ -56,3 +56,6 @@ class Image(Model):
     # A string containing information about errors that may occur 
     # when importing a custom image
     error_message = ''
+
+    def __str__(self):
+        return f'{self.distribution} {self.name}'
