@@ -5,10 +5,10 @@ class Size(Model):
     # Human-readable string as the identifier of the Size
     slug = ''
 
-    # Whether Droplet can be created with this Size
+    # The amount of RAM in megabytes
     memory = 0
 
-    # The integer of number CPUs allocated to Droplets of this size
+    # The number of CPUs allocated to Droplets of this size
     vcpus = 0
 
     # The amount of disk space set aside for Droplets of this size
@@ -30,3 +30,8 @@ class Size(Model):
 
     # Whether new Droplets can be created with this size
     available = False
+
+    def __str__(self):
+        return (f'Monthly price=${self.price_monthly}, ' 
+                f'CPU={self.vcpus}, Memory={self.memory} MB, '
+                f'Disk={self.disk} GB, Transfer={self.transfer} TB')
