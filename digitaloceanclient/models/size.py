@@ -2,33 +2,40 @@ from . import Model
 
 
 class Size(Model):
-    # Human-readable string as the identifier of the Size
+    """
+    Represents the Size object.
+
+    Attributes
+    ----------
+    slug : str
+        Human-readable string as the identifier of the Size
+    memory : int
+        The amount of RAM in megabytes
+    vcpus : int
+        The number of CPUs allocated to Droplets of this size
+    disk : int
+        The amount of disk space set aside for Droplets of this size in gigabytes
+    transfer : float
+        The amount of transfer bandwidth that is available for Droplets 
+        created in this size in terabytes
+    price_monthly : float
+        Monthly cost of this Droplet size in USD
+    price_hourly : float
+        Hourly cost of this Droplet size in USD 
+    regions : list
+        An array containing the region slugs where this size is available for Droplet creates
+    available : bool
+        Whether new Droplets can be created with this size
+    """
+
     slug = ''
-
-    # The amount of RAM in megabytes
     memory = 0
-
-    # The number of CPUs allocated to Droplets of this size
     vcpus = 0
-
-    # The amount of disk space set aside for Droplets of this size
-    # in gigabytes
     disk = 0
-
-    # The amount of transfer bandwidth that is available for Droplets 
-    # created in this size in terabytes
     transfer = 0
-
-    # Monthly cost of this Droplet size in USD
     price_monthly = 0
-
-    # Hourly cost of this Droplet size in USD 
     price_hourly = 0
-
-    # An array containing the region slugs where this size is available for Droplet creates
     regions = []
-
-    # Whether new Droplets can be created with this size
     available = False
 
     def __str__(self):

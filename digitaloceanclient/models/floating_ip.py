@@ -4,13 +4,21 @@ from .region import Region
 
 
 class FloatingIP(Model):
-    # The public IP address
+    """
+    Represent the Floating IP resource.
+
+    Attributes
+    ----------
+    ip : str
+        The public IP address
+    droplet : digitaloceanclient.models.Droplet
+        The droplet that the floating IP has been assigned to.
+    region : digitaloceanclient.models.Region
+        The region that the floating IP is reserved to.
+    """
+
     ip = ''
-
-    # The droplet that the floating IP has been assigned to
     droplet = None
-
-    # The region that the floating IP is reserved to
     region = None
 
     def __init__(self, data):

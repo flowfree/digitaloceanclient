@@ -2,6 +2,10 @@ import json
 
 
 class Model(object):
+    """
+    This is the base class for all of the models.
+    """
+
     def __init__(self, data):
         self.from_json(data)
 

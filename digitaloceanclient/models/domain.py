@@ -2,11 +2,19 @@ from . import Model
 
 
 class Domain(Model):
-    # Name of the domain
+    """
+    Represents a Domain resource.
+
+    Attributes
+    ----------
+    name : str
+        Name of the domain.
+    ttl : int
+        Time to live for the records in this domain in seconds.
+    zone_file : str
+        Complete contents of the zone file.
+    """
+
     name = ''
-
-    # Time to live for the records in this domain in seconds
     ttl = 0
-
-    # Complete contents of the zone file
     zone_file = ''

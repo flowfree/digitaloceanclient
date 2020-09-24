@@ -2,6 +2,34 @@ from . import Model
 
 
 class DomainRecord(Model):
+    """
+    Represents individual DNS record configured for a domain.
+
+    Attributes
+    ----------
+    id : str
+        Unique identifier for the domain record.
+    type : str
+        The type of the DNS record.
+    name : str
+        The host name, alias, or service being defined by the record.
+    data : str
+        Variable data depending on record type.
+    priority : int
+        The priority for SRV and MX records.
+    port : int
+        The port for SRV records.
+    ttl : int
+        Time to live for the record, in seconds.
+    weight : int
+        The weight for SRV records.
+    flags : int
+        An unsigned integer between 0-255 used for CAA records.
+    tag : str
+        The parameter tag for CAA records
+        Valid values are "issue", "issuewild", or "iodef"
+    """
+
     TYPE_A = 'A'
     TYPE_AAAA = 'AAAA'
     TYPE_CAA = 'CAA'
@@ -16,33 +44,13 @@ class DomainRecord(Model):
     TAG_ISSUEWILD = 'issuewild'
     TAG_IODEF = 'iodef'
 
-    # Unique identifier
     id = ''
-
-    # The type of the DNS record
     type = ''
-
-    # The host name, alias, or service being defined by the record
     name = ''
-
-    # Variable data depending on record type
     data = ''
-
-    # The priority for SRV and MX records
     priority = None
-
-    # The port for SRV records
     port = None
-
-    # time to live for the record, in seconds
     ttl = 0
-
-    # The weight for SRV records
     weight = None
-
-    # An unsigned integer between 0-255 used for CAA records
     flags = None
-
-    # The parameter tag for CAA records
-    # Valid values are "issue", "issuewild", or "iodef"
     tag = None

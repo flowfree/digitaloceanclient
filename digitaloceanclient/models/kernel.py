@@ -2,11 +2,19 @@ from . import Model
 
 
 class Kernel(Model):
-    # Kernel unique identifier
+    """
+    Represents a kernel resource.
+
+    Attributes
+    ----------
+    id : str
+        Kernel unique identifier.
+    name : str
+        The display name of the Kernel.
+    version : str
+        Kernel version
+    """
+
     id = ''
-
-    # The display name of the Kernel
     name = ''
-
-    # Kernel version
     version = ''
