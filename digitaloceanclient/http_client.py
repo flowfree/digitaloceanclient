@@ -9,12 +9,45 @@ from .exceptions import (
 
 
 class HttpClient(object):
+    """
+    Base class for making HTTP requests to the DigitalOcean REST API.
+
+    Attributes
+    ----------
+    base_url : str
+        The base URL for the API endpoints.
+    """
+
     base_url = 'https://api.digitalocean.com/v2/'
 
     def __init__(self, access_token):
+        """
+        Parameters
+        ----------
+        access_token : str
+            The access token for the DigitalOcean REST API.
+        """
         self.access_token = access_token
 
     def all(self, params=None):
+        """
+        Retrieve the collection of a resource.
+
+        Parameters
+        ----------
+        params : dict, optional
+            The querystring of the request URL.
+
+        Yields
+        ------
+        digitaloceanclient.Model
+            The model specified in the class that inherits this base class.
+
+        Raises
+        ------
+        digitaloceanclient.exceptions.APIError
+        """
+
         resource_name = self.__class__.__name__.lower()
         next_url = resource_name
         while True:
@@ -27,6 +60,43 @@ class HttpClient(object):
                 break
 
     def _request(self, method, path, params=None, payload=None):
+        """
+        Make the HTTP request.
+
+        Parameters
+        ----------
+        method : {"GET", "POST", "PUT", "DELETE"}
+            The HTTP method to be used.
+        path : str
+            The path the the endpoint API.
+        params : dict, optional
+            The querystring for the request.
+        payload : dict, optional
+            The JSON payload for the request body.
+
+        Returns
+        -------
+        dict, optional
+            The JSON response from the API or None if no response returned.
+
+        Raises
+        ------
+        digitaloceanclient.exceptions.BadRequest
+            When the request body is invalid.
+        digitalcoeanclient.exceptions.Unauthorized
+            When the access token is invalid.
+        digitalcoeanclient.exceptions.NotFound
+            When it hit unrecognized URL endpoint.
+        digitalcoeanclient.exceptions.UnprocessableEntity
+            When the request is okay but the API cannot further process it.
+        digitalcoeanclient.exceptions.RateLimitExceeded
+            When the API receives too many requests.
+        digitalcoeanclient.exceptions.ServerError
+            When the API experiencing internal server error.
+        digitalcoeanclient.exceptions.APIError
+            For other HTTP 4xx and 5xx errors.
+        """
+
         url = urljoin(self.base_url, path)
         f = getattr(requests, method.lower())
         headers = {
