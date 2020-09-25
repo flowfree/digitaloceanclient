@@ -6,6 +6,18 @@ class Images(HttpClient):
     model = Image
 
     def all(self, type_=None):
+        """
+        Get all images.
+
+        Parameters
+        ----------
+        type_ : {'distribution', 'application', 'private'}, optional
+            Filter images by the given type.
+
+        Yields
+        -------
+        digitaloceanclient.models.Image
+        """
         if type_:
             if type_ in ['distribution', 'application']:
                 params = {'type': type_}
