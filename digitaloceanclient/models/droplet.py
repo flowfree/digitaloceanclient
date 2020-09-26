@@ -2,6 +2,7 @@ from . import Model
 from .kernel import Kernel
 from .image import Image
 from .region import Region
+from .networks import Networks
 
 
 class Droplet(Model):
@@ -40,7 +41,7 @@ class Droplet(Model):
         The size object describing the droplet
     size_slug : ''
         The unique slug identifier for the size of this Droplet.
-    networks : dict
+    networks : digitaloceanclient.models.Networks
         The details of the network that are configured for the Droplet instance. 
         This is an object that contains keys for IPv4 and IPv6.
     kernel : digitaloceanclient.models.Kernel
@@ -91,7 +92,10 @@ class Droplet(Model):
 
         super().__init__(data)
 
-        classes = {'kernel': Kernel, 'image': Image, 'region': Region}
+        classes = {'kernel': Kernel, 
+                   'image': Image, 
+                   'region': Region,
+                   'networks': Networks}
         for attrib, class_ in classes.items():
             try:
                 setattr(self, attrib, class_(data[attrib]))

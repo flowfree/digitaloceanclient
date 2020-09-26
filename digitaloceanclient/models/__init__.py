@@ -44,6 +44,7 @@ from .floating_ip_action import FloatingIPAction
 from .image import Image
 from .image_action import ImageAction
 from .kernel import Kernel
+from .networks import Networks
 from .region import Region
 from .size import Size
 from .snapshot import Snapshot
