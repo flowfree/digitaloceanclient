@@ -54,12 +54,21 @@ class Droplet(Model):
         attached to the Droplet.
     vpc_uuid : str
         A string specifying the UUID of the VPC to which the Droplet is assigned.
+    public_ip_address : str
+        The first item in Droplet.networks.v4 where type='public'
     """
 
     STATUS_NEW = 'new'
     STATUS_ACTIVE = 'active'
     STATUS_OFF = 'off'
     STATUS_ARCHIVE = 'archive'
+
+    @property
+    def public_ip_address(self):
+        if self.networks.v4:
+            for item in self.networks.v4:
+                if item.type == 'public':
+                    return item.ip_address
 
     def __init__(self, data):
         """

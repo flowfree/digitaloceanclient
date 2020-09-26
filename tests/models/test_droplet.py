@@ -34,6 +34,7 @@ def test_populate_model_from_json(load_json):
     assert droplet.networks.v6[0].netmask == data['networks']['v6'][0]['netmask']
     assert droplet.networks.v6[0].gateway == data['networks']['v6'][0]['gateway']
     assert droplet.networks.v6[0].type == data['networks']['v6'][0]['type']
+    assert droplet.public_ip_address == data['networks']['v4'][0]['ip_address']
     assert droplet.image.id == data['image']['id']
     assert droplet.image.name == data['image']['name']
     assert droplet.image.distribution == data['image']['distribution']
