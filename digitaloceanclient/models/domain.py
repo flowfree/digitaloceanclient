@@ -15,6 +15,16 @@ class Domain(Model):
         Complete contents of the zone file.
     """
 
-    name = ''
-    ttl = 0
-    zone_file = ''
+    def __init__(self, data):
+        """
+        Parameters
+        ----------
+        data : dict
+            The JSON response from the API.
+        """
+
+        self.name = ''
+        self.ttl = 0
+        self.zone_file = ''
+
+        super().__init__(data)

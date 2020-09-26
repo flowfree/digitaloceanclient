@@ -37,11 +37,21 @@ class Certificate(Model):
     TYPE_CUSTOM = 'custom'
     TYPE_LETS_ENCRYPT = 'lets_encrypt'
 
-    id = ''
-    name = ''
-    not_after = ''
-    sha1_fingerprint = ''
-    created_at = ''
-    dns_names = []
-    state = ''
-    type = ''
+    def __init__(self, data):
+        """
+        Parameters
+        ----------
+        data : dict
+            The JSON response from the API.
+        """
+
+        self.id = ''
+        self.name = ''
+        self.not_after = ''
+        self.sha1_fingerprint = ''
+        self.created_at = ''
+        self.dns_names = []
+        self.state = ''
+        self.type = ''
+
+        super().__init__(data)

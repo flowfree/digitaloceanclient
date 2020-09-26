@@ -31,19 +31,27 @@ class Volume(Model):
         An array of tags the volume has been tagged with.
     """
 
-    id = None
-    region = None
-    droplet_ids = []
-    name = ''
-    description = ''
-    size_gigabytes = 0
-    created_at = ''
-    filesystem_type = ''
-    filesystem_label = ''
-    tags = []
-
     def __init__(self, data):
+        """
+        Parameters
+        ----------
+        data : dict
+            The JSON response from the API.
+        """
+
+        self.id = None
+        self.region = None
+        self.droplet_ids = []
+        self.name = ''
+        self.description = ''
+        self.size_gigabytes = 0
+        self.created_at = ''
+        self.filesystem_type = ''
+        self.filesystem_label = ''
+        self.tags = []
+
         super().__init__(data)
+
         try:
             self.region = Region(data['region'])
         except KeyError:

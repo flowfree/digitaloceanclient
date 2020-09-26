@@ -44,13 +44,23 @@ class DomainRecord(Model):
     TAG_ISSUEWILD = 'issuewild'
     TAG_IODEF = 'iodef'
 
-    id = ''
-    type = ''
-    name = ''
-    data = ''
-    priority = None
-    port = None
-    ttl = 0
-    weight = None
-    flags = None
-    tag = None
+    def __init__(self, data):
+        """
+        Parameters
+        ----------
+        data : dict
+            The JSON response from the API.
+        """
+
+        self.id = ''
+        self.type = ''
+        self.name = ''
+        self.data = ''
+        self.priority = None
+        self.port = None
+        self.ttl = 0
+        self.weight = None
+        self.flags = None
+        self.tag = None
+
+        super().__init__(data)

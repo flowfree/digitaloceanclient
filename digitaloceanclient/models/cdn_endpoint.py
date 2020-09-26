@@ -27,10 +27,20 @@ class CDNEndpoint(Model):
         The amount of time the content is cached by the CDN's edge servers in seconds.
     """
 
-    id = ''
-    origin = ''
-    endpoint = ''
-    created_at = ''
-    certificate_id = ''
-    custom_domain = ''
-    ttl = 0
+    def __init__(self, data):
+        """
+        Parameters
+        ----------
+        data : dict
+            The JSON response from the API.
+        """
+
+        self.id = ''
+        self.origin = ''
+        self.endpoint = ''
+        self.created_at = ''
+        self.certificate_id = ''
+        self.custom_domain = ''
+        self.ttl = 0
+
+        super().__init__(data)

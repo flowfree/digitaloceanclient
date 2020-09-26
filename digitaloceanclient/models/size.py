@@ -28,15 +28,25 @@ class Size(Model):
         Whether new Droplets can be created with this size
     """
 
-    slug = ''
-    memory = 0
-    vcpus = 0
-    disk = 0
-    transfer = 0
-    price_monthly = 0
-    price_hourly = 0
-    regions = []
-    available = False
+    def __init__(self, data):
+        """
+        Parameters
+        ----------
+        data : dict
+            The JSON response from the API.
+        """
+
+        self.slug = ''
+        self.memory = 0
+        self.vcpus = 0
+        self.disk = 0
+        self.transfer = 0
+        self.price_monthly = 0
+        self.price_hourly = 0
+        self.regions = []
+        self.available = False
+
+        super().__init__(data)
 
     def __str__(self):
         return (f'Monthly price=${self.price_monthly}, ' 

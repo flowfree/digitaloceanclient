@@ -54,23 +54,6 @@ class Database(Model):
     STATUS_RESIZING = 'resizing'
     STATUS_MIGRATING = 'migrating'
 
-    id = ''
-    name = ''
-    engine = ''
-    version = ''
-    connection = None
-    private_connection = None
-    users = []
-    db_names = []
-    num_nodes = 0
-    size = ''
-    region = ''
-    status = ''
-    maintenance_window = None 
-    created_at = ''
-    tags = []
-    private_network_uuid = ''
-
 
     class Connection(Model):
         """
@@ -94,13 +77,15 @@ class Database(Model):
             Whether the connection should be made over SSL
         """
 
-        uri = ''
-        database = ''
-        host = ''
-        port = 0
-        user = ''
-        password = ''
-        ssl = True
+        def __init__(self, data):
+            self.uri = ''
+            self.database = ''
+            self.host = ''
+            self.port = 0
+            self.user = ''
+            self.password = ''
+            self.ssl = True
+            super().__init__(data)
 
 
     class User(Model):
@@ -121,9 +106,11 @@ class Database(Model):
         ROLE_PRIMARY = 'primary'
         ROLE_NORMAL = 'normal'
 
-        name = ''
-        role = ''
-        password = ''
+        def __init__(self, data):
+            self.name = ''
+            self.role = ''
+            self.password = ''
+            super().__init__(data)
 
 
     class MainTenanceWindow(Model):
@@ -146,14 +133,41 @@ class Database(Model):
             maintenance update
         """
 
-        day = ''
-        hour = ''
-        pending = False
-        description = []
+        def __init__(self, data):
+            self.day = ''
+            self.hour = ''
+            self.pending = False
+            self.description = []
+            super().__init__(data)
 
 
     def __init__(self, data):
+        """
+        Parameters
+        ----------
+        data : dict
+            The JSON response from the API.
+        """
+
+        self.id = ''
+        self.name = ''
+        self.engine = ''
+        self.version = ''
+        self.connection = None
+        self.private_connection = None
+        self.users = []
+        self.db_names = []
+        self.num_nodes = 0
+        self.size = ''
+        self.region = ''
+        self.status = ''
+        self.maintenance_window = None 
+        self.created_at = ''
+        self.tags = []
+        self.private_network_uuid = ''
+
         super().__init__(data)
+
         try:
             self.connection = Database.Connection(data['connection'])
         except KeyError:

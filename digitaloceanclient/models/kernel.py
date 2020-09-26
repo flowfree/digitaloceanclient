@@ -15,6 +15,16 @@ class Kernel(Model):
         Kernel version
     """
 
-    id = ''
-    name = ''
-    version = ''
+    def __init__(self, data):
+        """
+        Parameters
+        ----------
+        data : dict
+            The JSON response from the API.
+        """
+
+        self.id = ''
+        self.name = ''
+        self.version = ''
+
+        super().__init__(data)

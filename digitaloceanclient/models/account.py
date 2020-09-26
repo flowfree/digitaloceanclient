@@ -29,11 +29,21 @@ class Account(Model):
     STATUS_WARNING = 'warning'
     STATUS_LOCKED = 'locked'
 
-    uuid = ''
-    droplet_limit = 0
-    floating_ip_limit = 0
-    volume_limit = 0
-    email = ''
-    email_verified = False
-    status = ''
-    status_message = ''
+    def __init__(self, data):
+        """
+        Parameters
+        ----------
+        data : dict
+            The JSON response from the API.
+        """
+
+        self.uuid = ''
+        self.droplet_limit = 0
+        self.floating_ip_limit = 0
+        self.volume_limit = 0
+        self.email = ''
+        self.email_verified = False
+        self.status = ''
+        self.status_message = ''
+
+        super().__init__(data)

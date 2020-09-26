@@ -27,12 +27,22 @@ class Snapshot(Model):
         Array of tags the snapshot has been tagged with
     """
 
-    id = ''
-    name = ''
-    regions = []
-    created_at = ''
-    resource_id = ''
-    resource_type = ''
-    min_disk_size = 0
-    size_gigabytes = 0
-    tags = []
+    def __init__(self, data):
+        """
+        Parameters
+        ----------
+        data : dict
+            The JSON response from the API.
+        """
+
+        self.id = ''
+        self.name = ''
+        self.regions = []
+        self.created_at = ''
+        self.resource_id = ''
+        self.resource_type = ''
+        self.min_disk_size = 0
+        self.size_gigabytes = 0
+        self.tags = []
+
+        super().__init__(data)

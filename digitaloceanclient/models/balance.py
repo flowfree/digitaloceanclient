@@ -18,13 +18,21 @@ class Balance(Model):
         The time at which balances were most recently generated
     """
 
-    month_to_date_balance = 0
-    account_balance = 0
-    month_to_date_usage = 0
-    generated_at = ''
-
     def __init__(self, data):
+        """
+        Parameters
+        ----------
+        data : dict
+            The JSON response from the API.
+        """
+
+        self.month_to_date_balance = 0
+        self.account_balance = 0
+        self.month_to_date_usage = 0
+        self.generated_at = ''
+
         super().__init__(data)
+
         self.month_to_date_balance = float(self.month_to_date_balance)
         self.account_balance = float(self.account_balance)
         self.month_to_date_usage = float(self.month_to_date_usage)

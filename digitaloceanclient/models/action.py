@@ -32,25 +32,30 @@ class Action(Model):
     STATUS_COMPLETED = 'completed'
     STATUS_ERRORED = 'errored'
 
-    id = None
-    status = None
-    type = None
-    started_at = None
-    completed_at = None
-    resource_id = None
-    resource_type = None
-    region = None
-    region_slug = None
-
     def __init__(self, data):
+        """
+        Parameters
+        ----------
+        data : dict
+            The JSON response from the API.
+        """
+
+        self.id = None
+        self.status = None
+        self.type = None
+        self.started_at = None
+        self.completed_at = None
+        self.resource_id = None
+        self.resource_type = None
+        self.region = None
+        self.region_slug = None
+
         super().__init__(data)
+
         try:
             self.region = Region(data['region'])
         except (KeyError, TypeError):
             pass
-
-    def all(self, *args, **kwargs):
-        raise NotImplementedError
 
     def is_in_progress(self):
         return self.status == self.STATUS_IN_PROGRESS
@@ -60,3 +65,6 @@ class Action(Model):
 
     def is_errored(self):
         return self.status == self.STATUS_ERRORED
+
+    def all(self, *args, **kwargs):
+        raise NotImplementedError

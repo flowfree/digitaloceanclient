@@ -49,20 +49,30 @@ class Image(Model):
     STATUS_PENDING = 'pending'
     STATUS_DELETED = 'deleted'
 
-    id = ''
-    name = ''
-    type = ''
-    distribution = ''
-    slug = ''
-    public = False
-    regions = []
-    created_at = ''
-    min_disk_size = 0
-    size_gigabytes = 0
-    description = ''
-    tags = []
-    status = ''
-    error_message = ''
+    def __init__(self, data):
+        """
+        Parameters
+        ----------
+        data : dict
+            The JSON response from the API.
+        """
+
+        self.id = ''
+        self.name = ''
+        self.type = ''
+        self.distribution = ''
+        self.slug = ''
+        self.public = False
+        self.regions = []
+        self.created_at = ''
+        self.min_disk_size = 0
+        self.size_gigabytes = 0
+        self.description = ''
+        self.tags = []
+        self.status = ''
+        self.error_message = ''
+
+        super().__init__(data)
 
     def __str__(self):
         return f'{self.distribution} {self.name}'

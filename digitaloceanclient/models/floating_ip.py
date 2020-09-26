@@ -17,12 +17,20 @@ class FloatingIP(Model):
         The region that the floating IP is reserved to.
     """
 
-    ip = ''
-    droplet = None
-    region = None
-
     def __init__(self, data):
+        """
+        Parameters
+        ----------
+        data : dict
+            The JSON response from the API.
+        """
+
+        self.ip = ''
+        self.droplet = None
+        self.region = None
+
         super().__init__(data)
+
         try:
             self.droplet = Droplet(data['droplet'])
         except (KeyError, TypeError):

@@ -60,29 +60,37 @@ class Droplet(Model):
     STATUS_OFF = 'off'
     STATUS_ARCHIVE = 'archive'
 
-    id = None
-    name = ''
-    memory = 0
-    vcpus = 0
-    disk = 0
-    locked = False
-    created_at = ''
-    status = ''
-    backup_ids = []
-    snapshot_ids = []
-    features = []
-    region = None
-    image = None
-    size = None
-    size_slug = ''
-    networks = None
-    kernel = None
-    tags = []
-    volume_ids = []
-    vpc_uuid = ''
-
     def __init__(self, data):
+        """
+        Parameters
+        ----------
+        data : dict
+            The JSON response from the API.
+        """
+
+        self.id = None
+        self.name = ''
+        self.memory = 0
+        self.vcpus = 0
+        self.disk = 0
+        self.locked = False
+        self.created_at = ''
+        self.status = ''
+        self.backup_ids = []
+        self.snapshot_ids = []
+        self.features = []
+        self.region = None
+        self.image = None
+        self.size = None
+        self.size_slug = ''
+        self.networks = None
+        self.kernel = None
+        self.tags = []
+        self.volume_ids = []
+        self.vpc_uuid = ''
+
         super().__init__(data)
+
         classes = {'kernel': Kernel, 'image': Image, 'region': Region}
         for attrib, class_ in classes.items():
             try:

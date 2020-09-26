@@ -29,18 +29,26 @@ class FloatingIPAction(Model):
         The slug for the region object
     """
 
-    id = ''
-    status = ''
-    type = ''
-    started_at = ''
-    completed_at = ''
-    resource_id = ''
-    resource_type = ''
-    region = None
-    region_slug = ''
-
     def __init__(self, data):
+        """
+        Parameters
+        ----------
+        data : dict
+            The JSON response from the API.
+        """
+
+        self.id = ''
+        self.status = ''
+        self.type = ''
+        self.started_at = ''
+        self.completed_at = ''
+        self.resource_id = ''
+        self.resource_type = ''
+        self.region = None
+        self.region_slug = ''
+
         super().__init__(data)
+
         try:
             self.region = Region(data['region'])
         except (KeyError, TypeError):

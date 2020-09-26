@@ -21,11 +21,21 @@ class Region(Model):
         An array which contains features available in this region
     """
 
-    slug = ''
-    name = ''
-    sizes = []
-    available = False
-    features = []
+    def __init__(self, data):
+        """
+        Parameters
+        ----------
+        data : dict
+            The JSON response from the API.
+        """
+
+        self.slug = ''
+        self.name = ''
+        self.sizes = []
+        self.available = False
+        self.features = []
+
+        super().__init__(data)
 
     def __str__(self):
         return self.name

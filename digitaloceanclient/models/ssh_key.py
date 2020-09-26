@@ -19,7 +19,17 @@ class SSHKey(Model):
         The display name for the key.
     """
 
-    id = ''
-    fingerprint = ''
-    public_key = ''
-    name = ''
+    def __init__(self, data):
+        """
+        Parameters
+        ----------
+        data : dict
+            The JSON response from the API.
+        """
+
+        self.id = ''
+        self.fingerprint = ''
+        self.public_key = ''
+        self.name = ''
+
+        super().__init__(data)

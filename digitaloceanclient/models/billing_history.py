@@ -21,13 +21,21 @@ class BillingHistory(Model):
         Type of billing history entry
     """
 
-    description = ''
-    amount = 0
-    invoice_id = ''
-    invoice_uuid = ''
-    date = ''
-    type = ''
-
     def __init__(self, data):
+        """
+        Parameters
+        ----------
+        data : dict
+            The JSON response from the API.
+        """
+
+        self.description = ''
+        self.amount = 0
+        self.invoice_id = ''
+        self.invoice_uuid = ''
+        self.date = ''
+        self.type = ''
+
         super().__init__(data)
+
         self.amount = float(self.amount)
