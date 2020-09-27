@@ -9,6 +9,7 @@ from .images import Images
 from .regions import Regions
 from .sizes import Sizes
 from .ssh_keys import SSHKeys
+from .tags import Tags
 
 
 class DigitalOceanClient(object):
@@ -23,6 +24,7 @@ class DigitalOceanClient(object):
         self.regions = Regions(access_token)
         self.sizes = Sizes(access_token)
         self.ssh_keys = SSHKeys(access_token)
+        self.tags = Tags(access_token)
 
         # Exceptions
         self.APIError = APIError
