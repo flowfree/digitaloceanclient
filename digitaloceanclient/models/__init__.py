@@ -49,4 +49,5 @@ from .region import Region
 from .size import Size
 from .snapshot import Snapshot
 from .ssh_key import SSHKey
+from .tag import Tag
 from .volume import Volume
