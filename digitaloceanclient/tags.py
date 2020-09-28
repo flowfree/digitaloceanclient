@@ -25,6 +25,9 @@ class Tags(HttpClient):
 
         return super().create(payload={'name': name})
 
+    def get(self, name):
+        return super().get(path=f'tags/{name}')
+
     def delete(self, name):
         """
         Delete a Tag.

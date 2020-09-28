@@ -90,6 +90,32 @@ class HttpClient(object):
         except (KeyError, ValueError, TypeError):
             raise MalformedResponse(f'Malformed response for {model_name.title()}')
 
+    def get(self, path):
+        """
+        Retrieve a resource.
+
+        Parameters
+        ----------
+        path : str
+            The path to the resource to be retrieved.
+
+        Returns
+        -------
+        digitaloceanclient.models.Model
+            The model for the specified resource.
+
+        Raises
+        ------
+        digitaloceanclient.exceptions.APIError
+        """
+
+        response = self._request('GET', path)
+        try:
+            model_name = self.model.__name__.lower()
+            return self.model(response[model_name])
+        except (KeyError, ValueError, TypeError):
+            raise MalformedResponse(f'Malformed response for {model_name.title()}')
+
     def delete(self, path):
         """
         Delete a resource.
