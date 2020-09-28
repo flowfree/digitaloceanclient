@@ -66,6 +66,43 @@ def test_list_all_images(client, load_json):
 
 
 @responses.activate
+def test_create_an_image(client, load_json):
+    json_response = load_json('image_202_accepted.json')
+    responses.add(
+        responses.POST,
+        'https://api.digitalocean.com/v2/images',
+        json=json_response,
+        status=202,
+    )
+
+    image = client.images.create(name='ubuntu-18.04-minimal',
+                                 url='http://cloud-images.ubuntu.com/minimal/releases/bionic/release/ubuntu-18.04-minimal-cloudimg-amd64.img',
+                                 region='nyc3',
+                                 distribution='Ubuntu',
+                                 description='Cloud-optimized image w/ small footprint',
+                                 tags=['base-image', 'prod'])
+
+    assert responses.calls[0].request.body.decode('utf-8') == json.dumps({
+        "name": "ubuntu-18.04-minimal",
+        "url": "http://cloud-images.ubuntu.com/minimal/releases/bionic/release/ubuntu-18.04-minimal-cloudimg-amd64.img",
+        "region": "nyc3",
+        "distribution": "Ubuntu",
+        "description": "Cloud-optimized image w/ small footprint",
+        "tags": ["base-image", "prod"]
+    })
+    expected = json_response['image']
+    assert image.id == expected['id']
+    assert image.name == expected['name']
+    assert image.distribution == expected['distribution']
+    assert image.regions == expected['regions']
+    assert image.created_at == expected['created_at']
+    assert image.description == expected['description']
+    assert image.tags == expected['tags']
+    assert image.status == expected['status']
+    assert image.error_message == expected['error_message']
+
+
+@responses.activate
 def test_retrieve_a_single_image(client, load_json):
     json_response = load_json('single_image.json')
     responses.add(
