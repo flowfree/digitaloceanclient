@@ -17,6 +17,10 @@ class Images(HttpClient):
         Yields
         -------
         digitaloceanclient.models.Image
+
+        Raises
+        ------
+        digitaloceanclient.exceptions.APIError
         """
 
         if type_:
@@ -45,6 +49,10 @@ class Images(HttpClient):
         Returns
         -------
         digitaloceanclient.models.Image
+
+        Raises
+        ------
+        digitaloceanclient.exceptions.APIError
         """
 
         if image_id == None and slug == None:
@@ -52,3 +60,34 @@ class Images(HttpClient):
         if not image_id:
             image_id = slug
         return super().get(image_id)
+
+    def update(self, image_id, name, description=None, distribution=None):
+        """
+        Update an existing image.
+
+        Parameters
+        ----------
+        image_id : str
+            The ID of the specified image.
+        name : str
+            The new display name.
+        description: str, optional
+            An optional free-form text field to describe an image.
+        distribution: str, optional
+            The name of a custom image's distribution.
+
+        Returns
+        -------
+        digitaloceanclient.models.Image
+
+        Raises
+        ------
+        digitaloceanclient.exceptions.APIError
+        """
+
+        payload = {'name': name}
+        if description:
+            payload['description'] = description
+        if distribution:
+            payload['distribution'] = distribution
+        return super().update(image_id, payload=payload)

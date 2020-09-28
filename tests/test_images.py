@@ -1,3 +1,5 @@
+import json
+
 import pytest 
 
 import responses
@@ -122,3 +124,49 @@ def test_retrieve_an_image_by_invalid_slug(client):
     with pytest.raises(client.NotFound) as e:
         image = client.images.get(slug='xxxyyyzzz')
     assert str(e.value) == 'NotFound: The requested image does not exist.'
+
+
+@responses.activate
+def test_update_an_image(client, load_json):
+    json_response = load_json('single_image2.json')
+    responses.add(
+        responses.PUT,
+        'https://api.digitalocean.com/v2/images/7555620',
+        json=json_response,
+        status=200
+    )
+
+    image = client.images.update('7555620', name='new-image-name')
+
+    assert responses.calls[0].request.body.decode('utf-8') == json.dumps({'name': 'new-image-name'})
+
+    expected = json_response['image']
+    assert image.id == expected['id']
+    assert image.name == expected['name']
+    assert image.distribution == expected['distribution']
+    assert image.slug == expected['slug']
+    assert image.public == expected['public']
+    assert image.regions == expected['regions']
+    assert image.created_at == expected['created_at']
+    assert image.min_disk_size == expected['min_disk_size']
+    assert image.size_gigabytes == expected['size_gigabytes']
+    assert image.description == expected['description']
+    assert image.tags == expected['tags']
+    assert image.status == expected['status']
+    assert image.error_message == expected['error_message']
+
+
+@responses.activate
+def test_delete_an_image(client):
+    responses.add(
+        responses.DELETE,
+        'https://api.digitalocean.com/v2/images/7938391',
+        status=204
+    )
+
+    response = client.images.delete('7938391')
+
+    assert len(responses.calls) == 1
+    assert responses.calls[0].request.method == 'DELETE'
+    assert responses.calls[0].request.url == 'https://api.digitalocean.com/v2/images/7938391'
+    assert response == None
