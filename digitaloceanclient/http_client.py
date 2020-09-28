@@ -59,6 +59,37 @@ class HttpClient(object):
             except KeyError:
                 break
 
+    def create(self, path=None, payload=None):
+        """
+        Create a new resource.
+
+        Parameters
+        ----------
+        path : str, optional
+            The path of the API endpoint. If not supplied, it will be 
+            determined from the resource class name.
+        payload : dict, optional
+            The dict for the JSON payload 
+
+        Returns
+        -------
+        digitaloceanclient.models.Model
+            The model for the specified resource.
+
+        Raises
+        ------
+        digitaloceanclient.exceptions.APIError
+        """
+
+        if not path:
+            path = self.__class__.__name__.lower()
+        response = self._request('POST', path, payload=payload)
+        try:
+            model_name = self.model.__name__.lower()
+            return self.model(response[model_name])
+        except (KeyError, ValueError, TypeError):
+            raise MalformedResponse(f'Malformed response for {model_name.title()}')
+
     def _request(self, method, path, params=None, payload=None):
         """
         Make the HTTP request.
