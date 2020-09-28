@@ -51,7 +51,7 @@ class Tags(HttpClient):
             If receives HTTP errors.
         """
 
-        return super().get(path=f'tags/{name}')
+        return super().get(resource_id=name)
 
     def delete(self, name):
         """
@@ -68,4 +68,4 @@ class Tags(HttpClient):
             If receives HTTP errors.
         """
 
-        return super().delete(path=f'tags/{name}')
+        return super().delete(resource_id=name)
