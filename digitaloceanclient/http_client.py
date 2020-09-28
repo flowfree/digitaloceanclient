@@ -90,6 +90,22 @@ class HttpClient(object):
         except (KeyError, ValueError, TypeError):
             raise MalformedResponse(f'Malformed response for {model_name.title()}')
 
+    def delete(self, path):
+        """
+        Delete a resource.
+
+        Parameters
+        ----------
+        path : str
+            The path to the resource to be deleted.
+
+        Raises
+        ------
+        digitaloceanclient.exceptions.APIError
+        """
+
+        response = self._request('DELETE', path)
+
     def _request(self, method, path, params=None, payload=None):
         """
         Make the HTTP request.

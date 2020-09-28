@@ -44,3 +44,19 @@ def test_create_new_tag(client, load_json):
 
     assert tag.name == 'awesome'
     assert tag.resources.count == 0
+
+
+@responses.activate
+def test_delete_tag(client):
+    responses.add(
+        responses.DELETE,
+        'https://api.digitalocean.com/v2/tags/sampletag',
+        status=204
+    )
+
+    response = client.tags.delete(name='sampletag')
+
+    assert len(responses.calls) == 1
+    assert responses.calls[0].request.method == 'DELETE'
+    assert responses.calls[0].request.url == 'https://api.digitalocean.com/v2/tags/sampletag'
+    assert response == None
