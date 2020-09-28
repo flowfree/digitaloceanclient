@@ -3,6 +3,10 @@ from .models import Tag
 
 
 class Tags(HttpClient):
+    """
+    Create, read, update, and delete the tags.
+    """
+
     model = Tag 
 
     def create(self, name):
@@ -17,15 +21,36 @@ class Tags(HttpClient):
         Returns
         -------
         digitaloceanclient.models.Tag
+            The Tag model.
 
         Raises
         ------
         digitaloceanclient.exceptions.APIError
+            If receives HTTP errors.
         """
 
         return super().create(payload={'name': name})
 
     def get(self, name):
+        """
+        Retrieve a Tag.
+
+        Parameters
+        ----------
+        name : str
+            The name of the tag to be retrieved.
+
+        Returns
+        -------
+        digitaloceanclient.models.Tag
+            The Tag model.
+
+        Raises
+        ------
+        digitaloceanclient.exceptions.APIError
+            If receives HTTP errors.
+        """
+
         return super().get(path=f'tags/{name}')
 
     def delete(self, name):
@@ -40,6 +65,7 @@ class Tags(HttpClient):
         Raises
         ------
         digitaloceanclient.exceptions.APIError
+            If receives HTTP errors.
         """
 
         return super().delete(path=f'tags/{name}')
