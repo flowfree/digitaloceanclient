@@ -1,3 +1,5 @@
+import pytest 
+
 import responses
 
 
@@ -59,3 +61,64 @@ def test_list_all_images(client, load_json):
     ]
 
     assert image_slugs == expected_slugs
+
+
+@responses.activate
+def test_retrieve_a_single_image(client, load_json):
+    json_response = load_json('single_image.json')
+    responses.add(
+        responses.GET,
+        'https://api.digitalocean.com/v2/images/7555620',
+        json=json_response,
+    )
+
+    image = client.images.get('7555620')
+
+    expected = json_response['image']
+    assert image.id == expected['id']
+    assert image.name == expected['name']
+    assert image.distribution == expected['distribution']
+    assert image.slug == expected['slug']
+    assert image.public == expected['public']
+    assert image.regions == expected['regions']
+    assert image.created_at == expected['created_at']
+    assert image.min_disk_size == expected['min_disk_size']
+    assert image.size_gigabytes == expected['size_gigabytes']
+    assert image.description == expected['description']
+    assert image.tags == expected['tags']
+    assert image.status == expected['status']
+    assert image.error_message == expected['error_message']
+
+
+@responses.activate
+def test_retrieve_an_image_by_slug(client, load_json):
+    json_response = load_json('single_image.json')
+    responses.add(
+        responses.GET,
+        'https://api.digitalocean.com/v2/images/sample-snapshot',
+        json=json_response,
+    )
+
+    image = client.images.get(slug='sample-snapshot')
+
+    assert len(responses.calls) == 1
+    assert responses.calls[0].request.method == 'GET'
+    assert responses.calls[0].request.url == 'https://api.digitalocean.com/v2/images/sample-snapshot'
+
+    expected = json_response['image']
+    assert image.id == expected['id']
+    assert image.name == expected['name']
+
+
+@responses.activate
+def test_retrieve_an_image_by_invalid_slug(client):
+    responses.add(
+        responses.GET,
+        'https://api.digitalocean.com/v2/images/xxxyyyzzz',
+        json={'message': 'The requested image does not exist.'},
+        status=404,
+    )
+
+    with pytest.raises(client.NotFound) as e:
+        image = client.images.get(slug='xxxyyyzzz')
+    assert str(e.value) == 'NotFound: The requested image does not exist.'

@@ -18,6 +18,7 @@ class Images(HttpClient):
         -------
         digitaloceanclient.models.Image
         """
+
         if type_:
             if type_ in ['distribution', 'application']:
                 params = {'type': type_}
@@ -29,3 +30,25 @@ class Images(HttpClient):
             params = None
 
         return super().all(params)
+
+    def get(self, image_id=None, slug=None):
+        """
+        Retrieve an image by ID or slug.
+
+        Parameters
+        ----------
+        image_id : str
+            The ID of the specified image.
+        slug : str, optional
+            The slug of the specified image.
+
+        Returns
+        -------
+        digitaloceanclient.models.Image
+        """
+
+        if image_id == None and slug == None:
+            raise ValueError('Please specify the image ID or the image slug.')
+        if not image_id:
+            image_id = slug
+        return super().get(image_id)
