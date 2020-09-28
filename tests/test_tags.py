@@ -23,6 +23,10 @@ def test_get_all_tags(client, load_json):
     assert row.resources.droplets.count == expected['resources']['droplets']['count']
     assert row.resources.droplets.last_tagged_uri == expected['resources']['droplets']['last_tagged_uri']
 
+    assert len(responses.calls) == 1
+    assert responses.calls[0].request.method == 'GET'
+    assert responses.calls[0].request.url == 'https://api.digitalocean.com/v2/tags'
+
 
 @responses.activate
 def test_create_new_tag(client, load_json):
