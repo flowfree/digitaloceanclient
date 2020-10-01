@@ -237,5 +237,21 @@ class Volumes(HttpClient):
         except (KeyError, TypeError, ValueError):
             raise MalformedResponse('Invalid JSON for action.')
 
+    def all_actions(self, volume_id):
+        """
+        List all actions for a volume.
+        """
+
+        next_url = f'volumes/{volume_id}/actions'
+        while True:
+            response = self._request('GET', next_url)
+            for row in response.get('actions', []):
+                yield Action(row)
+            try:
+                next_url = response['links']['pages']['next']
+            except KeyError:
+                break
+
+
     def update(self, *args, **kwargs):
         raise NotImplementedError

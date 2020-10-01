@@ -252,6 +252,29 @@ def test_resize_volume(client, load_json):
     assert action_model_matches(action, json_response['action'])
 
 
+@responses.activate
+def test_list_all_actions_for_a_volume(client, load_json):
+    json_response = load_json('action_list.json')
+    volume_id = '7724db7c-e098-11e5-b522-000f53304e51'
+
+    responses.add(
+        responses.GET,
+        f'https://api.digitalocean.com/v2/volumes/{volume_id}/actions',
+        json=json_response,
+    )
+
+    rows = client.volumes.all_actions(volume_id=volume_id)
+
+    for expected in json_response['actions']:
+        action = next(rows)
+        assert action_model_matches(action, expected)
+
+    assert len(responses.calls) == 1
+    assert responses.calls[0].request.method == 'GET'
+    assert responses.calls[0].request.url == \
+        f'https://api.digitalocean.com/v2/volumes/{volume_id}/actions'
+
+
 def test_update_is_not_implemented(client):
     with pytest.raises(NotImplementedError) as e:
         client.volumes.update('1234567')
