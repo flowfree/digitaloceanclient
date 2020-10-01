@@ -5,6 +5,10 @@ from .exceptions import MalformedResponse
 
 
 class Volumes(HttpClient):
+    """
+    Create, retrieve, and delete block storage volumes.
+    """
+
     model = Volume
 
     def all(self, name=None):
