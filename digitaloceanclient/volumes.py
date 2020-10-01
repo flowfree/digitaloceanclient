@@ -166,5 +166,16 @@ class Volumes(HttpClient):
         except (KeyError, TypeError, ValueError):
             raise MalformedResponse('Invalid JSON for action.')
 
+    def detach_from_droplet(self, volume_id, droplet_id, region_slug=None):
+        path = f'volumes/{volume_id}/actions'
+        payload = {'type': 'detach', 'droplet_id': droplet_id}
+        if region_slug:
+            payload['region'] = region_slug
+        response = self._request('POST', path, payload=payload)
+        try:
+            return Action(response['action'])
+        except (KeyError, TypeError, ValueError):
+            raise MalformedResponse('Invalid JSON for action.')
+
     def update(self, *args, **kwargs):
         raise NotImplementedError

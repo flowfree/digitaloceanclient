@@ -177,6 +177,33 @@ def test_attach_volume_to_droplet_2(client, load_json):
     assert action_model_matches(action, json_response['action'])
 
 
+@responses.activate
+def test_detach_volume_from_droplet_1(client, load_json):
+    json_response = load_json('action_detach_volume.json')
+    volume_id = '7724db7c-e098-11e5-b522-000f53304e51'
+    droplet_id = '11612190'
+
+    responses.add(
+        responses.POST,
+        f'https://api.digitalocean.com/v2/volumes/{volume_id}/actions',
+        json=json_response,
+    )
+
+    action = client.volumes.detach_from_droplet(volume_id=volume_id,
+                                                droplet_id=droplet_id,
+                                                region_slug='nyc1')
+
+    assert responses.calls[0].request.method == 'POST'
+    assert responses.calls[0].request.url == \
+            f'https://api.digitalocean.com/v2/volumes/{volume_id}/actions'
+    assert responses.calls[0].request.body.decode('utf-8') == json.dumps({
+        'type': 'detach',
+        'droplet_id': droplet_id,
+        'region': 'nyc1',
+    })
+    assert action_model_matches(action, json_response['action'])
+
+
 def test_update_is_not_implemented(client):
     with pytest.raises(NotImplementedError) as e:
         client.volumes.update('1234567')
