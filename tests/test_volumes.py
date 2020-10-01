@@ -1,5 +1,6 @@
 import json 
 
+import pytest
 import responses
 
 
@@ -116,6 +117,11 @@ def test_delete_volume(client):
     assert responses.calls[0].request.method == 'DELETE'
     assert responses.calls[0].request.url == 'https://api.digitalocean.com/v2/volumes/1234567'
     assert response == None
+
+
+def test_update_is_not_implemented(client):
+    with pytest.raises(NotImplementedError) as e:
+        client.volumes.update('1234567')
 
 
 def volume_matches(volume, expected):

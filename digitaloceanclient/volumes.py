@@ -114,3 +114,6 @@ class Volumes(HttpClient):
             return Snapshot(response['snapshot'])
         except (KeyError, TypeError, ValueError):
             raise MalformedResponse('Invalid JSON for snapshot.')
+
+    def update(self, *args, **kwargs):
+        raise NotImplementedError
