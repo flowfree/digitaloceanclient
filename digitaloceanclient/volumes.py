@@ -1,5 +1,7 @@
 from .http_client import HttpClient
 from .models import Volume
+from .models import Snapshot
+from .exceptions import MalformedResponse
 
 
 class Volumes(HttpClient):
@@ -73,3 +75,31 @@ class Volumes(HttpClient):
 
         return super().create(payload=payload)
 
+    def create_snapshot(self, volume_id, name, tags=None):
+        """
+        Create snapshot from a volume.
+
+        Parameters
+        ----------
+        volume_id : str
+            The ID of the volume to create the snapshot from.
+        name : str
+            The name for the snapshot.
+        tags : list, optional
+            List of tag names from the snapshot.
+
+        Returns
+        -------
+        digitaloceanclient.models.Snapshot
+
+        Raises
+        ------
+        digitaloceanclient.exceptions.MalformedResponse
+        """
+
+        payload = {'name': name}
+        response = self._request('POST', f'volumes/{volume_id}/snapshots', payload=payload)
+        try:
+            return Snapshot(response['snapshot'])
+        except (KeyError, TypeError, ValueError):
+            raise MalformedResponse('Invalid JSON for snapshot.')

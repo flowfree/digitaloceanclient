@@ -16,7 +16,7 @@ def test_list_all_volumes(client, load_json):
 
     for expected in json_response['volumes']:
         volume = next(rows)
-        assert model_matches(volume, expected)
+        assert volume_matches(volume, expected)
 
 
 @responses.activate
@@ -32,7 +32,7 @@ def test_list_all_volumes_filtered_by_name(client, load_json):
 
     for expected in json_response['volumes']:
         volume = next(rows)
-        assert model_matches(volume, expected)
+        assert volume_matches(volume, expected)
 
     assert responses.calls[0].request.method == 'GET'
     assert responses.calls[0].request.url == 'https://api.digitalocean.com/v2/volumes?name=example'
@@ -65,7 +65,7 @@ def test_create_new_block_storage_volume(client, load_json):
         'filesystem_type': 'ext4',
         'filesystem_label': 'example',
     })
-    assert model_matches(volume, json_response['volume'])
+    assert volume_matches(volume, json_response['volume'])
 
 
 @responses.activate
@@ -78,10 +78,32 @@ def test_retrieve_existing_volume(client, load_json):
     )
 
     volume = client.volumes.get('506f78a4-e098-11e5-ad9f-000f53306ae1')
-    assert model_matches(volume, json_response['volume'])
+    assert volume_matches(volume, json_response['volume'])
 
 
-def model_matches(volume, expected):
+@responses.activate
+def test_create_snapshot_from_volume(client, load_json):
+    json_response = load_json('snapshot_201_created.json')
+    responses.add(
+        responses.POST,
+        'https://api.digitalocean.com/v2/volumes/82a48a18-873f-11e6-96bf-000f53315a41/snapshots',
+        json=json_response,
+        status=201,
+    )
+
+    snapshot = client.volumes.create_snapshot(volume_id='82a48a18-873f-11e6-96bf-000f53315a41',
+                                              name='big-data-snapshot1475261774')
+
+    assert responses.calls[0].request.method == 'POST'
+    assert responses.calls[0].request.url == \
+        'https://api.digitalocean.com/v2/volumes/82a48a18-873f-11e6-96bf-000f53315a41/snapshots'
+    assert responses.calls[0].request.body.decode('utf-8') == json.dumps({
+        'name': 'big-data-snapshot1475261774',
+    })
+    assert snapshot_matches(snapshot, json_response['snapshot'])
+
+
+def volume_matches(volume, expected):
     """
     Helper function to check the volume's attributes to match with the expected dict.
     """
@@ -98,3 +120,15 @@ def model_matches(volume, expected):
            volume.created_at == expected['created_at'] and \
            volume.filesystem_type == expected['filesystem_type'] and \
            volume.filesystem_label == expected['filesystem_label']
+
+def snapshot_matches(snapshot, expected):
+    return snapshot.id == expected['id'] and \
+           snapshot.name == expected['name'] and \
+           snapshot.regions == expected['regions'] and \
+           snapshot.created_at == expected['created_at'] and \
+           snapshot.resource_id == expected['resource_id'] and \
+           snapshot.resource_type == expected['resource_type'] and \
+           snapshot.min_disk_size == expected['min_disk_size'] and \
+           snapshot.size_gigabytes == expected['size_gigabytes'] and \
+           snapshot.tags == expected['tags'] 
+
