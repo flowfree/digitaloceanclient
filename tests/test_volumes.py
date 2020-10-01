@@ -1,3 +1,5 @@
+import json 
+
 import responses
 
 
@@ -44,3 +46,32 @@ def test_list_all_volumes_filtered_by_name(client, load_json):
     next(rows)
     assert responses.calls[0].request.method == 'GET'
     assert responses.calls[0].request.url == 'https://api.digitalocean.com/v2/volumes?name=example'
+
+
+@responses.activate
+def test_create_new_block_storage_volume(client, load_json):
+    json_response = load_json('volume_201_created.json')
+    responses.add(
+        responses.POST,
+        'https://api.digitalocean.com/v2/volumes',
+        json=json_response,
+        status=201,
+    )
+
+    volume = client.volumes.create(name='example',
+                                   region='nyc1',
+                                   size_gigabytes=10,
+                                   description='Block storage for examples',
+                                   filesystem_type='ext4',
+                                   filesystem_label='example')
+
+    assert responses.calls[0].request.method == 'POST'
+    assert responses.calls[0].request.url == 'https://api.digitalocean.com/v2/volumes'
+    assert responses.calls[0].request.body.decode('utf-8') == json.dumps({
+        'name': 'example',
+        'region': 'nyc1',
+        'size_gigabytes': 10,
+        'description': 'Block storage for examples',
+        'filesystem_type': 'ext4',
+        'filesystem_label': 'example',
+    })
