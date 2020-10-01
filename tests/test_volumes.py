@@ -134,8 +134,7 @@ def test_attach_volume_to_droplet_1(client, load_json):
 
     action = client.volumes.attach_to_droplet(volume_id='7724db7c-e098-11e5-b522-000f53304e51',
                                               droplet_id='11612190',
-                                              region_slug='nyc1',
-                                              tags=['aninterestingtag'])
+                                              region_slug='nyc1')
 
     assert responses.calls[0].request.method == 'POST'
     assert responses.calls[0].request.url == \
@@ -144,7 +143,6 @@ def test_attach_volume_to_droplet_1(client, load_json):
         'type': 'attach',
         'droplet_id': '11612190',
         'region': 'nyc1',
-        'tags': ['aninterestingtag']
     })
     assert action_model_matches(action, json_response['action'])
 
@@ -161,8 +159,7 @@ def test_attach_volume_to_droplet_2(client, load_json):
 
     action = client.volumes.attach_to_droplet(volume_name='example',
                                               droplet_id='11612190',
-                                              region_slug='nyc1',
-                                              tags=['aninterestingtag'])
+                                              region_slug='nyc1')
 
     assert responses.calls[0].request.method == 'POST'
     assert responses.calls[0].request.url == \
@@ -172,7 +169,6 @@ def test_attach_volume_to_droplet_2(client, load_json):
         'droplet_id': '11612190',
         'volume_name': 'example',
         'region': 'nyc1',
-        'tags': ['aninterestingtag']
     })
     assert action_model_matches(action, json_response['action'])
 
@@ -199,6 +195,32 @@ def test_detach_volume_from_droplet_1(client, load_json):
     assert responses.calls[0].request.body.decode('utf-8') == json.dumps({
         'type': 'detach',
         'droplet_id': droplet_id,
+        'region': 'nyc1',
+    })
+    assert action_model_matches(action, json_response['action'])
+
+
+@responses.activate
+def test_detach_volume_from_droplet_2(client, load_json):
+    json_response = load_json('action_detach_volume.json')
+
+    responses.add(
+        responses.POST,
+        'https://api.digitalocean.com/v2/volumes/actions',
+        json=json_response,
+    )
+
+    action = client.volumes.detach_from_droplet(volume_name='example',
+                                                droplet_id='11612190',
+                                                region_slug='nyc1')
+
+    assert responses.calls[0].request.method == 'POST'
+    assert responses.calls[0].request.url == \
+            f'https://api.digitalocean.com/v2/volumes/actions'
+    assert responses.calls[0].request.body.decode('utf-8') == json.dumps({
+        'type': 'detach',
+        'droplet_id': '11612190',
+        'volume_name': 'example',
         'region': 'nyc1',
     })
     assert action_model_matches(action, json_response['action'])

@@ -119,7 +119,7 @@ class Volumes(HttpClient):
             raise MalformedResponse('Invalid JSON for snapshot.')
 
     def attach_to_droplet(self, droplet_id, volume_id=None, 
-                          volume_name=None, region_slug=None, tags=None):
+                          volume_name=None, region_slug=None):
         """
         Attach a block storage volume to a droplet.
 
@@ -135,8 +135,6 @@ class Volumes(HttpClient):
             needs to be supplied.
         region_slug : str, optional
             The slug of the region where the volume is located in.
-        tags : list, optional
-            Optional tags.
 
         Return
         ------
@@ -158,17 +156,48 @@ class Volumes(HttpClient):
             payload['volume_name'] = volume_name
         if region_slug:
             payload['region'] = region_slug
-        if tags:
-            payload['tags'] = tags
         response = self._request('POST', path, payload=payload)
         try:
             return Action(response['action'])
         except (KeyError, TypeError, ValueError):
             raise MalformedResponse('Invalid JSON for action.')
 
-    def detach_from_droplet(self, volume_id, droplet_id, region_slug=None):
-        path = f'volumes/{volume_id}/actions'
+    def detach_from_droplet(self, droplet_id, volume_id=None, 
+                            volume_name=None, region_slug=None):
+        """
+        Detach a block storage volume to a droplet.
+
+        Parameters
+        ----------
+        droplet_id : str
+            The ID of the droplet to be attached with the volume.
+        volume_id : str, optional
+            The ID of the volume. Note that one of volume_id or volume_name
+            needs to be supplied.
+        volume_name: str, optional
+            The name of the volume. Note that one of volume_name or volume_id
+            needs to be supplied.
+        region_slug : str, optional
+            The slug of the region where the volume is located in.
+
+        Return
+        ------
+        digitaloceanclient.models.Action
+
+        Raises
+        ------
+        digitaloceanclient.models.MalformedResponse
+        """
+
+        if volume_id == None and volume_name == None:
+            raise ValueError('Please specify either volume_id or volume_name.')
+        if volume_id:
+            path = f'volumes/{volume_id}/actions'
+        else:
+            path = 'volumes/actions'
         payload = {'type': 'detach', 'droplet_id': droplet_id}
+        if volume_name:
+            payload['volume_name'] = volume_name
         if region_slug:
             payload['region'] = region_slug
         response = self._request('POST', path, payload=payload)
