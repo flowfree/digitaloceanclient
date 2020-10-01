@@ -124,7 +124,7 @@ def test_delete_volume(client):
 
 
 @responses.activate
-def test_attach_volume_to_droplet(client, load_json):
+def test_attach_volume_to_droplet_1(client, load_json):
     json_response = load_json('action_attach_volume.json')
     responses.add(
         responses.POST,
@@ -143,6 +143,34 @@ def test_attach_volume_to_droplet(client, load_json):
     assert responses.calls[0].request.body.decode('utf-8') == json.dumps({
         'type': 'attach',
         'droplet_id': '11612190',
+        'region': 'nyc1',
+        'tags': ['aninterestingtag']
+    })
+    assert action_model_matches(action, json_response['action'])
+
+
+@responses.activate
+def test_attach_volume_to_droplet_2(client, load_json):
+    json_response = load_json('action_attach_volume.json')
+    responses.add(
+        responses.POST,
+        'https://api.digitalocean.com/v2/volumes/actions',
+        json=json_response,
+        status=202,
+    )
+
+    action = client.volumes.attach_to_droplet(volume_name='example',
+                                              droplet_id='11612190',
+                                              region_slug='nyc1',
+                                              tags=['aninterestingtag'])
+
+    assert responses.calls[0].request.method == 'POST'
+    assert responses.calls[0].request.url == \
+            'https://api.digitalocean.com/v2/volumes/actions'
+    assert responses.calls[0].request.body.decode('utf-8') == json.dumps({
+        'type': 'attach',
+        'droplet_id': '11612190',
+        'volume_name': 'example',
         'region': 'nyc1',
         'tags': ['aninterestingtag']
     })

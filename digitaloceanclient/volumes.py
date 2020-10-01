@@ -118,16 +118,21 @@ class Volumes(HttpClient):
         except (KeyError, TypeError, ValueError):
             raise MalformedResponse('Invalid JSON for snapshot.')
 
-    def attach_to_droplet(self, volume_id, droplet_id, region_slug=None, tags=None):
+    def attach_to_droplet(self, droplet_id, volume_id=None, 
+                          volume_name=None, region_slug=None, tags=None):
         """
         Attach a block storage volume to a droplet.
 
         Parameters
         ----------
-        volume_id : str
-            The ID of the volume.
         droplet_id : str
             The ID of the droplet to be attached with the volume.
+        volume_id : str, optional
+            The ID of the volume. Note that one of volume_id or volume_name
+            needs to be supplied.
+        volume_name: str, optional
+            The name of the volume. Note that one of volume_name or volume_id
+            needs to be supplied.
         region_slug : str, optional
             The slug of the region where the volume is located in.
         tags : list, optional
@@ -142,15 +147,20 @@ class Volumes(HttpClient):
         digitaloceanclient.models.MalformedResponse
         """
 
-        payload = {
-            'type': 'attach',
-            'droplet_id': droplet_id,
-        }
+        if volume_id == None and volume_name == None:
+            raise ValueError('Please specify either volume_id or volume_name.')
+        if volume_id:
+            path = f'volumes/{volume_id}/actions'
+        else:
+            path = 'volumes/actions'
+        payload = {'type': 'attach', 'droplet_id': droplet_id}
+        if volume_name:
+            payload['volume_name'] = volume_name
         if region_slug:
             payload['region'] = region_slug
         if tags:
             payload['tags'] = tags
-        response = self._request('POST', f'volumes/{volume_id}/actions', payload=payload)
+        response = self._request('POST', path, payload=payload)
         try:
             return Action(response['action'])
         except (KeyError, TypeError, ValueError):
