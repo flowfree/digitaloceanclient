@@ -75,3 +75,18 @@ def test_create_new_block_storage_volume(client, load_json):
         'filesystem_type': 'ext4',
         'filesystem_label': 'example',
     })
+
+    expected = json_response['volume']
+    assert volume.id == expected['id']
+    assert volume.region.name == expected['region']['name']
+    assert volume.region.slug == expected['region']['slug']
+    assert volume.region.sizes == expected['region']['sizes']
+    assert volume.region.features == expected['region']['features']
+    assert volume.region.available == expected['region']['available']
+    assert volume.droplet_ids == expected['droplet_ids']
+    assert volume.name == expected['name']
+    assert volume.description == expected['description']
+    assert volume.size_gigabytes == expected['size_gigabytes']
+    assert volume.created_at == expected['created_at']
+    assert volume.filesystem_type == expected['filesystem_type']
+    assert volume.filesystem_label == expected['filesystem_label']
