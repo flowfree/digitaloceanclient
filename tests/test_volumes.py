@@ -3,8 +3,9 @@ import json
 import pytest
 import responses
 
-from .test_actions import action_model_matches
-from .test_snapshots import snapshot_model_matches
+from .models.test_action import action_model_matches
+from .models.test_snapshot import snapshot_model_matches
+from .models.test_volume import volume_model_matches
 
 
 @responses.activate
@@ -151,22 +152,3 @@ def test_attach_volume_to_droplet(client, load_json):
 def test_update_is_not_implemented(client):
     with pytest.raises(NotImplementedError) as e:
         client.volumes.update('1234567')
-
-
-def volume_model_matches(volume, expected):
-    """
-    Helper function to check the Volume model against the expected dict.
-    """
-    return volume.id == expected['id'] and \
-           volume.region.name == expected['region']['name'] and \
-           volume.region.slug == expected['region']['slug'] and \
-           volume.region.sizes == expected['region']['sizes'] and \
-           volume.region.features == expected['region']['features'] and \
-           volume.region.available == expected['region']['available'] and \
-           volume.droplet_ids == expected['droplet_ids'] and \
-           volume.name == expected['name'] and \
-           volume.description == expected['description'] and \
-           volume.size_gigabytes == expected['size_gigabytes'] and \
-           volume.created_at == expected['created_at'] and \
-           volume.filesystem_type == expected['filesystem_type'] and \
-           volume.filesystem_label == expected['filesystem_label']

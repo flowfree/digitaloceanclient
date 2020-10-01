@@ -62,3 +62,19 @@ def test_load_from_json(load_json):
     assert action.region_slug == data['region_slug']
 
     assert action.is_completed()
+
+
+def action_model_matches(action, expected):
+    return action.id == expected['id'] and \
+           action.status == expected['status'] and \
+           action.type == expected['type'] and \
+           action.started_at == expected['started_at'] and \
+           action.completed_at == expected['completed_at'] and \
+           action.resource_id == expected['resource_id'] and \
+           action.resource_type == expected['resource_type'] and \
+           action.region.name == expected['region']['name'] and \
+           action.region.slug == expected['region']['slug'] and \
+           action.region.sizes == expected['region']['sizes'] and \
+           action.region.features == expected['region']['features'] and \
+           action.region.available == expected['region']['available'] and \
+           action.region_slug == expected['region_slug']

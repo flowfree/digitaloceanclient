@@ -114,18 +114,3 @@ def test_delete_a_snapshot(client):
 def test_no_create(client):
     with pytest.raises(NotImplementedError) as e:
         client.snapshots.create('aaa', 'bbb', 'ccc')
-
-
-def snapshot_model_matches(snapshot, expected):
-    """
-    Helper function to check the Snapshot model against the expected dict.
-    """
-    return snapshot.id == expected['id'] and \
-           snapshot.name == expected['name'] and \
-           snapshot.regions == expected['regions'] and \
-           snapshot.created_at == expected['created_at'] and \
-           snapshot.resource_id == expected['resource_id'] and \
-           snapshot.resource_type == expected['resource_type'] and \
-           snapshot.min_disk_size == expected['min_disk_size'] and \
-           snapshot.size_gigabytes == expected['size_gigabytes'] and \
-           snapshot.tags == expected['tags'] 

@@ -119,19 +119,3 @@ def test_update_is_unsupported(client):
 def test_delete_is_unsupported(client):
     with pytest.raises(NotImplementedError) as e:
         client.actions.delete('12345')
-
-
-def action_model_matches(action, expected):
-    return action.id == expected['id'] and \
-           action.status == expected['status'] and \
-           action.type == expected['type'] and \
-           action.started_at == expected['started_at'] and \
-           action.completed_at == expected['completed_at'] and \
-           action.resource_id == expected['resource_id'] and \
-           action.resource_type == expected['resource_type'] and \
-           action.region.name == expected['region']['name'] and \
-           action.region.slug == expected['region']['slug'] and \
-           action.region.sizes == expected['region']['sizes'] and \
-           action.region.features == expected['region']['features'] and \
-           action.region.available == expected['region']['available'] and \
-           action.region_slug == expected['region_slug']
