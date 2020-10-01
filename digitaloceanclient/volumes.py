@@ -1,6 +1,5 @@
 from .http_client import HttpClient
-from .models import Volume
-from .models import Snapshot
+from .models import Action, Snapshot, Volume
 from .exceptions import MalformedResponse
 
 
@@ -118,6 +117,44 @@ class Volumes(HttpClient):
             return Snapshot(response['snapshot'])
         except (KeyError, TypeError, ValueError):
             raise MalformedResponse('Invalid JSON for snapshot.')
+
+    def attach_to_droplet(self, volume_id, droplet_id, region_slug=None, tags=None):
+        """
+        Attach a block storage volume to a droplet.
+
+        Parameters
+        ----------
+        volume_id : str
+            The ID of the volume.
+        droplet_id : str
+            The ID of the droplet to be attached with the volume.
+        region_slug : str, optional
+            The slug of the region where the volume is located in.
+        tags : list, optional
+            Optional tags.
+
+        Return
+        ------
+        digitaloceanclient.models.Action
+
+        Raises
+        ------
+        digitaloceanclient.models.MalformedResponse
+        """
+
+        payload = {
+            'type': 'attach',
+            'droplet_id': droplet_id,
+        }
+        if region_slug:
+            payload['region'] = region_slug
+        if tags:
+            payload['tags'] = tags
+        response = self._request('POST', f'volumes/{volume_id}/actions', payload=payload)
+        try:
+            return Action(response['action'])
+        except (KeyError, TypeError, ValueError):
+            raise MalformedResponse('Invalid JSON for action.')
 
     def update(self, *args, **kwargs):
         raise NotImplementedError
