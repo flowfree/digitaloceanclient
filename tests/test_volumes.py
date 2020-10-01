@@ -16,20 +16,7 @@ def test_list_all_volumes(client, load_json):
 
     for expected in json_response['volumes']:
         volume = next(rows)
-        assert volume.id == expected['id']
-        assert volume.region.name == expected['region']['name']
-        assert volume.region.slug == expected['region']['slug']
-        assert volume.region.sizes == expected['region']['sizes']
-        assert volume.region.features == expected['region']['features']
-        assert volume.region.available == expected['region']['available']
-        assert volume.droplet_ids == expected['droplet_ids']
-        assert volume.name == expected['name']
-        assert volume.description == expected['description']
-        assert volume.size_gigabytes == expected['size_gigabytes']
-        assert volume.created_at == expected['created_at']
-        assert volume.filesystem_type == expected['filesystem_type']
-        assert volume.filesystem_label == expected['filesystem_label']
-        assert volume.tags == expected['tags']
+        assert model_matches(volume, expected)
 
 
 @responses.activate
@@ -43,7 +30,10 @@ def test_list_all_volumes_filtered_by_name(client, load_json):
 
     rows = client.volumes.all(name='example')
 
-    next(rows)
+    for expected in json_response['volumes']:
+        volume = next(rows)
+        assert model_matches(volume, expected)
+
     assert responses.calls[0].request.method == 'GET'
     assert responses.calls[0].request.url == 'https://api.digitalocean.com/v2/volumes?name=example'
 
@@ -75,18 +65,36 @@ def test_create_new_block_storage_volume(client, load_json):
         'filesystem_type': 'ext4',
         'filesystem_label': 'example',
     })
+    assert model_matches(volume, json_response['volume'])
 
-    expected = json_response['volume']
-    assert volume.id == expected['id']
-    assert volume.region.name == expected['region']['name']
-    assert volume.region.slug == expected['region']['slug']
-    assert volume.region.sizes == expected['region']['sizes']
-    assert volume.region.features == expected['region']['features']
-    assert volume.region.available == expected['region']['available']
-    assert volume.droplet_ids == expected['droplet_ids']
-    assert volume.name == expected['name']
-    assert volume.description == expected['description']
-    assert volume.size_gigabytes == expected['size_gigabytes']
-    assert volume.created_at == expected['created_at']
-    assert volume.filesystem_type == expected['filesystem_type']
-    assert volume.filesystem_label == expected['filesystem_label']
+
+@responses.activate
+def test_retrieve_existing_volume(client, load_json):
+    json_response = load_json('volume_single.json')
+    responses.add(
+        responses.GET,
+        'https://api.digitalocean.com/v2/volumes/506f78a4-e098-11e5-ad9f-000f53306ae1',
+        json=json_response,
+    )
+
+    volume = client.volumes.get('506f78a4-e098-11e5-ad9f-000f53306ae1')
+    assert model_matches(volume, json_response['volume'])
+
+
+def model_matches(volume, expected):
+    """
+    Helper function to check the volume's attributes to match with the expected dict.
+    """
+    return volume.id == expected['id'] and \
+           volume.region.name == expected['region']['name'] and \
+           volume.region.slug == expected['region']['slug'] and \
+           volume.region.sizes == expected['region']['sizes'] and \
+           volume.region.features == expected['region']['features'] and \
+           volume.region.available == expected['region']['available'] and \
+           volume.droplet_ids == expected['droplet_ids'] and \
+           volume.name == expected['name'] and \
+           volume.description == expected['description'] and \
+           volume.size_gigabytes == expected['size_gigabytes'] and \
+           volume.created_at == expected['created_at'] and \
+           volume.filesystem_type == expected['filesystem_type'] and \
+           volume.filesystem_label == expected['filesystem_label']
