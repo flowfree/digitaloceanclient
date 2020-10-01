@@ -20,5 +20,14 @@ class Account(HttpClient):
         return AccountModel(data)
 
     def balance(self):
+        """
+        Retrieve the balance information.
+
+        Returns
+        -------
+        digitaloceanclient.models.Balance
+            The current user's balance information
+        """
+
         response = self._request('GET', 'customers/my/balance')
         return Balance(response)

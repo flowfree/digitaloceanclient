@@ -11,6 +11,7 @@ from .sizes import Sizes
 from .snapshots import Snapshots
 from .ssh_keys import SSHKeys
 from .tags import Tags
+from .volumes import Volumes
 
 
 class DigitalOceanClient(object):
@@ -27,6 +28,7 @@ class DigitalOceanClient(object):
         self.snapshots = Snapshots(access_token)
         self.ssh_keys = SSHKeys(access_token)
         self.tags = Tags(access_token)
+        self.volumes = Volumes(access_token)
 
         # Exceptions
         self.APIError = APIError
