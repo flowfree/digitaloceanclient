@@ -103,6 +103,21 @@ def test_create_snapshot_from_volume(client, load_json):
     assert snapshot_matches(snapshot, json_response['snapshot'])
 
 
+@responses.activate
+def test_delete_volume(client):
+    responses.add(
+        responses.DELETE,
+        'https://api.digitalocean.com/v2/volumes/1234567',
+        status=204,
+    )
+
+    response = client.volumes.delete('1234567')
+
+    assert responses.calls[0].request.method == 'DELETE'
+    assert responses.calls[0].request.url == 'https://api.digitalocean.com/v2/volumes/1234567'
+    assert response == None
+
+
 def volume_matches(volume, expected):
     """
     Helper function to check the volume's attributes to match with the expected dict.

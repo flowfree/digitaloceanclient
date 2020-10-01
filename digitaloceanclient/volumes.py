@@ -75,6 +75,17 @@ class Volumes(HttpClient):
 
         return super().create(payload=payload)
 
+    def delete(self, volume_id):
+        """
+        Delete a volume.
+
+        Parameters
+        ----------
+        volume_id : str
+            The ID of the volume to be deleted.
+        """
+        return super().delete(volume_id)
+
     def create_snapshot(self, volume_id, name, tags=None):
         """
         Create snapshot from a volume.
