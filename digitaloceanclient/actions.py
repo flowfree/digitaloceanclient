@@ -10,6 +10,38 @@ class Actions(HttpClient):
 
     model = Action
 
+    def all(self):
+        """
+        List all actions.
+
+        Yields
+        ------
+        digitaloceanclient.models.Action
+        """
+
+        return super().all()
+
+    def get(self, action_id):
+        """
+        Retrieve an action.
+
+        Parameters
+        ----------
+        action_id : str
+            The ID of the specified action.
+
+        Returns
+        -------
+        digitaloceanclient.models.Action
+            The Action model.
+
+        Raises
+        ------
+        digitaloceanclient.exceptions.APIError
+        """
+
+        return super().get(action_id)
+
     def refresh(self, action):
         """
         Refresh the given action to get its current state.
@@ -24,6 +56,7 @@ class Actions(HttpClient):
         digitaloceanclient.exceptions.MalformedResponse
             When the API response cannot be populated to the Action model.
         """
+
         assert (type(action) == Action)
         assert (action.id != '' and action.id != None)
 
@@ -32,3 +65,12 @@ class Actions(HttpClient):
             action.from_json(response['action'])
         except (KeyError, TypeError):
             raise MalformedResponse("Invalid response: 'action'")
+
+    def create(self, *args, **kwargs):
+        raise NotImplementedError
+
+    def update(self, *args, **kwargs):
+        raise NotImplementedError
+
+    def delete(self, *args, **kwargs):
+        raise NotImplementedError

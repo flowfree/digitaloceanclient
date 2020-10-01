@@ -5,6 +5,34 @@ from digitaloceanclient.models import Action
 
 
 @responses.activate
+def test_list_all_actions(client, load_json):
+    json_response = load_json('action_list.json')
+    responses.add(
+        responses.GET,
+        'https://api.digitalocean.com/v2/actions',
+        json=json_response
+    )
+
+    rows = client.actions.all()
+
+    for expected in json_response['actions']:
+        action = next(rows)
+        assert action.id == expected['id']
+        assert action.status == expected['status']
+        assert action.type == expected['type']
+        assert action.started_at == expected['started_at']
+        assert action.completed_at == expected['completed_at']
+        assert action.resource_id == expected['resource_id']
+        assert action.resource_type == expected['resource_type']
+        assert action.region.name == expected['region']['name']
+        assert action.region.slug == expected['region']['slug']
+        assert action.region.sizes == expected['region']['sizes']
+        assert action.region.features == expected['region']['features']
+        assert action.region.available == expected['region']['available']
+        assert action.region_slug == expected['region_slug']
+
+
+@responses.activate
 def test_refresh_action(client, load_json):
     json_response1 = load_json('action_create_droplet_in_progress.json')
     json_response2 = load_json('action_create_droplet_completed.json')
@@ -38,6 +66,33 @@ def test_refresh_action(client, load_json):
 
 
 @responses.activate
+def test_retrieve_an_action(client, load_json):
+    json_response = load_json('action_single.json')
+    responses.add(
+        responses.GET,
+        'https://api.digitalocean.com/v2/actions/36804636',
+        json=json_response,
+    )
+
+    action = client.actions.get('36804636')
+
+    expected = json_response['action']
+    assert action.id == expected['id']
+    assert action.status == expected['status']
+    assert action.type == expected['type']
+    assert action.started_at == expected['started_at']
+    assert action.completed_at == expected['completed_at']
+    assert action.resource_id == expected['resource_id']
+    assert action.resource_type == expected['resource_type']
+    assert action.region.name == expected['region']['name']
+    assert action.region.slug == expected['region']['slug']
+    assert action.region.sizes == expected['region']['sizes']
+    assert action.region.features == expected['region']['features']
+    assert action.region.available == expected['region']['available']
+    assert action.region_slug == expected['region_slug']
+
+
+@responses.activate
 def test_refresh_get_malformed_response(client):
     responses.add(
         responses.GET,
@@ -49,3 +104,18 @@ def test_refresh_get_malformed_response(client):
 
     with pytest.raises(client.MalformedResponse) as e:
         client.actions.refresh(action)
+
+
+def test_create_is_unsupported(client):
+    with pytest.raises(NotImplementedError) as e:
+        client.actions.create('aaa', 'bbb', 'ccc')
+
+
+def test_update_is_unsupported(client):
+    with pytest.raises(NotImplementedError) as e:
+        client.actions.update('12345')
+
+
+def test_delete_is_unsupported(client):
+    with pytest.raises(NotImplementedError) as e:
+        client.actions.delete('12345')
