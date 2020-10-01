@@ -3,6 +3,10 @@ import json
 import pytest
 import responses
 
+from .models.test_action import action_model_matches
+from .models.test_snapshot import snapshot_model_matches
+from .models.test_volume import volume_model_matches
+
 
 @responses.activate
 def test_list_all_volumes(client, load_json):
@@ -17,7 +21,7 @@ def test_list_all_volumes(client, load_json):
 
     for expected in json_response['volumes']:
         volume = next(rows)
-        assert volume_matches(volume, expected)
+        assert volume_model_matches(volume, expected)
 
 
 @responses.activate
@@ -33,7 +37,7 @@ def test_list_all_volumes_filtered_by_name(client, load_json):
 
     for expected in json_response['volumes']:
         volume = next(rows)
-        assert volume_matches(volume, expected)
+        assert volume_model_matches(volume, expected)
 
     assert responses.calls[0].request.method == 'GET'
     assert responses.calls[0].request.url == 'https://api.digitalocean.com/v2/volumes?name=example'
@@ -66,7 +70,7 @@ def test_create_new_block_storage_volume(client, load_json):
         'filesystem_type': 'ext4',
         'filesystem_label': 'example',
     })
-    assert volume_matches(volume, json_response['volume'])
+    assert volume_model_matches(volume, json_response['volume'])
 
 
 @responses.activate
@@ -79,7 +83,7 @@ def test_retrieve_existing_volume(client, load_json):
     )
 
     volume = client.volumes.get('506f78a4-e098-11e5-ad9f-000f53306ae1')
-    assert volume_matches(volume, json_response['volume'])
+    assert volume_model_matches(volume, json_response['volume'])
 
 
 @responses.activate
@@ -101,7 +105,7 @@ def test_create_snapshot_from_volume(client, load_json):
     assert responses.calls[0].request.body.decode('utf-8') == json.dumps({
         'name': 'big-data-snapshot1475261774',
     })
-    assert snapshot_matches(snapshot, json_response['snapshot'])
+    assert snapshot_model_matches(snapshot, json_response['snapshot'])
 
 
 @responses.activate
@@ -119,37 +123,158 @@ def test_delete_volume(client):
     assert response == None
 
 
+@responses.activate
+def test_attach_volume_to_droplet_1(client, load_json):
+    json_response = load_json('action_attach_volume.json')
+    responses.add(
+        responses.POST,
+        'https://api.digitalocean.com/v2/volumes/7724db7c-e098-11e5-b522-000f53304e51/actions',
+        json=json_response,
+    )
+
+    action = client.volumes.attach_to_droplet(volume_id='7724db7c-e098-11e5-b522-000f53304e51',
+                                              droplet_id='11612190',
+                                              region_slug='nyc1')
+
+    assert responses.calls[0].request.method == 'POST'
+    assert responses.calls[0].request.url == \
+            'https://api.digitalocean.com/v2/volumes/7724db7c-e098-11e5-b522-000f53304e51/actions'
+    assert responses.calls[0].request.body.decode('utf-8') == json.dumps({
+        'type': 'attach',
+        'droplet_id': '11612190',
+        'region': 'nyc1',
+    })
+    assert action_model_matches(action, json_response['action'])
+
+
+@responses.activate
+def test_attach_volume_to_droplet_2(client, load_json):
+    json_response = load_json('action_attach_volume.json')
+    responses.add(
+        responses.POST,
+        'https://api.digitalocean.com/v2/volumes/actions',
+        json=json_response,
+        status=202,
+    )
+
+    action = client.volumes.attach_to_droplet(volume_name='example',
+                                              droplet_id='11612190',
+                                              region_slug='nyc1')
+
+    assert responses.calls[0].request.method == 'POST'
+    assert responses.calls[0].request.url == \
+            'https://api.digitalocean.com/v2/volumes/actions'
+    assert responses.calls[0].request.body.decode('utf-8') == json.dumps({
+        'type': 'attach',
+        'droplet_id': '11612190',
+        'volume_name': 'example',
+        'region': 'nyc1',
+    })
+    assert action_model_matches(action, json_response['action'])
+
+
+@responses.activate
+def test_detach_volume_from_droplet_1(client, load_json):
+    json_response = load_json('action_detach_volume.json')
+    volume_id = '7724db7c-e098-11e5-b522-000f53304e51'
+    droplet_id = '11612190'
+
+    responses.add(
+        responses.POST,
+        f'https://api.digitalocean.com/v2/volumes/{volume_id}/actions',
+        json=json_response,
+    )
+
+    action = client.volumes.detach_from_droplet(volume_id=volume_id,
+                                                droplet_id=droplet_id,
+                                                region_slug='nyc1')
+
+    assert responses.calls[0].request.method == 'POST'
+    assert responses.calls[0].request.url == \
+            f'https://api.digitalocean.com/v2/volumes/{volume_id}/actions'
+    assert responses.calls[0].request.body.decode('utf-8') == json.dumps({
+        'type': 'detach',
+        'droplet_id': droplet_id,
+        'region': 'nyc1',
+    })
+    assert action_model_matches(action, json_response['action'])
+
+
+@responses.activate
+def test_detach_volume_from_droplet_2(client, load_json):
+    json_response = load_json('action_detach_volume.json')
+
+    responses.add(
+        responses.POST,
+        'https://api.digitalocean.com/v2/volumes/actions',
+        json=json_response,
+    )
+
+    action = client.volumes.detach_from_droplet(volume_name='example',
+                                                droplet_id='11612190',
+                                                region_slug='nyc1')
+
+    assert responses.calls[0].request.method == 'POST'
+    assert responses.calls[0].request.url == \
+            f'https://api.digitalocean.com/v2/volumes/actions'
+    assert responses.calls[0].request.body.decode('utf-8') == json.dumps({
+        'type': 'detach',
+        'droplet_id': '11612190',
+        'volume_name': 'example',
+        'region': 'nyc1',
+    })
+    assert action_model_matches(action, json_response['action'])
+
+
+@responses.activate
+def test_resize_volume(client, load_json):
+    json_response = load_json('action_resize_volume.json')
+    volume_id = '7724db7c-e098-11e5-b522-000f53304e51'
+
+    responses.add(
+        responses.POST,
+        f'https://api.digitalocean.com/v2/volumes/{volume_id}/actions',
+        json=json_response,
+    )
+
+    action = client.volumes.resize(volume_id=volume_id,
+                                   size=100,
+                                   region_slug='nyc1')
+
+    assert responses.calls[0].request.method == 'POST'
+    assert responses.calls[0].request.url == \
+            f'https://api.digitalocean.com/v2/volumes/{volume_id}/actions'
+    assert responses.calls[0].request.body.decode('utf-8') == json.dumps({
+        'type': 'resize',
+        'size_gigabytes': 100,
+        'region': 'nyc1'
+    })
+    assert action_model_matches(action, json_response['action'])
+
+
+@responses.activate
+def test_list_all_actions_for_a_volume(client, load_json):
+    json_response = load_json('action_list.json')
+    volume_id = '7724db7c-e098-11e5-b522-000f53304e51'
+
+    responses.add(
+        responses.GET,
+        f'https://api.digitalocean.com/v2/volumes/{volume_id}/actions',
+        json=json_response,
+    )
+
+    rows = client.volumes.all_actions(volume_id=volume_id)
+
+    for expected in json_response['actions']:
+        action = next(rows)
+        assert action_model_matches(action, expected)
+
+    assert len(responses.calls) == 1
+    assert responses.calls[0].request.method == 'GET'
+    assert responses.calls[0].request.url == \
+        f'https://api.digitalocean.com/v2/volumes/{volume_id}/actions'
+
+
 def test_update_is_not_implemented(client):
     with pytest.raises(NotImplementedError) as e:
         client.volumes.update('1234567')
-
-
-def volume_matches(volume, expected):
-    """
-    Helper function to check the volume's attributes to match with the expected dict.
-    """
-    return volume.id == expected['id'] and \
-           volume.region.name == expected['region']['name'] and \
-           volume.region.slug == expected['region']['slug'] and \
-           volume.region.sizes == expected['region']['sizes'] and \
-           volume.region.features == expected['region']['features'] and \
-           volume.region.available == expected['region']['available'] and \
-           volume.droplet_ids == expected['droplet_ids'] and \
-           volume.name == expected['name'] and \
-           volume.description == expected['description'] and \
-           volume.size_gigabytes == expected['size_gigabytes'] and \
-           volume.created_at == expected['created_at'] and \
-           volume.filesystem_type == expected['filesystem_type'] and \
-           volume.filesystem_label == expected['filesystem_label']
-
-def snapshot_matches(snapshot, expected):
-    return snapshot.id == expected['id'] and \
-           snapshot.name == expected['name'] and \
-           snapshot.regions == expected['regions'] and \
-           snapshot.created_at == expected['created_at'] and \
-           snapshot.resource_id == expected['resource_id'] and \
-           snapshot.resource_type == expected['resource_type'] and \
-           snapshot.min_disk_size == expected['min_disk_size'] and \
-           snapshot.size_gigabytes == expected['size_gigabytes'] and \
-           snapshot.tags == expected['tags'] 
-
