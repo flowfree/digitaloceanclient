@@ -206,5 +206,36 @@ class Volumes(HttpClient):
         except (KeyError, TypeError, ValueError):
             raise MalformedResponse('Invalid JSON for action.')
 
+    def resize(self, volume_id, size, region_slug=None):
+        """
+        Resize a volume.
+
+        Parameters
+        ----------
+        volume_id : str
+            The ID of the volume to be resized.
+        size : int
+            The new size of the volume in gigabytes.
+        region_slug : str
+            The slug of the region where the volume is located in.
+
+        Returns
+        -------
+        digitaloceanclient.models.Action
+        """
+
+        path = f'volumes/{volume_id}/actions'
+        payload = {
+            'type': 'resize',
+            'size_gigabytes': size,
+        }
+        if region_slug:
+            payload['region'] = region_slug
+        response = self._request('POST', path, payload=payload)
+        try:
+            return Action(response['action'])
+        except (KeyError, TypeError, ValueError):
+            raise MalformedResponse('Invalid JSON for action.')
+
     def update(self, *args, **kwargs):
         raise NotImplementedError
