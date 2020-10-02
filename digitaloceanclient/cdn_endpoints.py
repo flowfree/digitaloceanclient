@@ -62,3 +62,26 @@ class CDNEndpoints(HttpClient):
             return self.model(response['endpoint'])
         except (KeyError, ValueError, TypeError):
             raise MalformedResponse(f'Malformed response for CDNEndpoint.')
+
+    def get(self, endpoint_id):
+        """
+        Retrieve an existing CDN endpoint.
+
+        Parameters
+        ----------
+        endpoint_id : str
+            The ID of the CDN endpoint to retrieve.
+
+        Returns
+        -------
+        digitaloceanclient.models.CDNEndpoint
+
+        Raises
+        ------
+        digitaloceanclient.exceptions.APIError
+        """
+        response = self._request('GET', f'cdn/endpoints/{endpoint_id}')
+        try:
+            return self.model(response['endpoint'])
+        except (KeyError, ValueError, TypeError):
+            raise MalformedResponse(f'Malformed response for CDNEndpoint.')

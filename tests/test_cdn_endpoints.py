@@ -11,7 +11,8 @@ def test_list_all_cdn_endpoints(client, load_json):
     responses.add(
         responses.GET,
         'https://api.digitalocean.com/v2/cdn/endpoints',
-        json=json_response
+        json=json_response,
+        status=200,
     )
 
     rows = client.cdn_endpoints.all()
@@ -44,4 +45,18 @@ def test_create_new_cdn_endpoint(client, load_json):
         'custom_domain': 'static.example.com',
         'ttl': 3600
     })
+    assert cdn_endpoint_model_matches(endpoint, json_response['endpoint'])
+
+
+@responses.activate
+def test_retrieve_existing_cdn_endpoint(client, load_json):
+    json_response = load_json('cdn_endpoint_single.json')
+    responses.add(
+        responses.GET,
+        'https://api.digitalocean.com/v2/cdn/endpoints/19f06b6a-3ace-4315-b086-499a0e521b76',
+        json=json_response,
+        status=200,
+    )
+
+    endpoint = client.cdn_endpoints.get('19f06b6a-3ace-4315-b086-499a0e521b76')
     assert cdn_endpoint_model_matches(endpoint, json_response['endpoint'])
