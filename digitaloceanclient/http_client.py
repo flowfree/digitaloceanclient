@@ -1,4 +1,4 @@
-from urllib.parse import urljoin 
+from urllib.parse import urljoin, urlparse
 
 import requests
 
@@ -29,12 +29,15 @@ class HttpClient(object):
         """
         self.access_token = access_token
 
-    def all(self, params=None):
+    def all(self, path=None, params=None):
         """
         Retrieve the collection of a resource.
 
         Parameters
         ----------
+        path : str, optional
+            The path to the API endpoint. If not specified, it will derived 
+            from the class name.
         params : dict, optional
             The querystring of the request URL.
 
@@ -49,10 +52,14 @@ class HttpClient(object):
         """
 
         resource_name = self.__class__.__name__.lower()
-        next_url = resource_name
+        if path:
+            next_url = path
+        else:
+            next_url = resource_name
         while True:
             response = self._request('GET', next_url, params)
-            for row in response.get(resource_name, []):
+            key = urlparse(next_url).path.split('/')[-1]
+            for row in response.get(key, []):
                 yield self.model(row)
             try:
                 next_url = response['links']['pages']['next']
