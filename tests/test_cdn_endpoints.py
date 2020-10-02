@@ -97,3 +97,28 @@ def test_delete_endpoint(client):
 
     response = client.cdn_endpoints.delete('19f06b6a-3ace-4315-b086-499a0e521b76')
     assert response == None
+
+
+@responses.activate
+def test_purge_endpoint(client):
+    responses.add(
+        responses.DELETE,
+        'https://api.digitalocean.com/v2/cdn/endpoints/19f06b6a-3ace-4315-b086-499a0e521b76/cache',
+        status=204,
+    )
+
+    response = client.cdn_endpoints.purge(
+        endpoint_id='19f06b6a-3ace-4315-b086-499a0e521b76',
+        files=[
+            'assets/img/hero.png',
+            'assets/css/*',
+        ]
+    )
+
+    assert responses.calls[0].request.body.decode('utf-8') == json.dumps({
+        'files': [
+            'assets/img/hero.png',
+            'assets/css/*',
+        ]
+    })
+    assert response == None

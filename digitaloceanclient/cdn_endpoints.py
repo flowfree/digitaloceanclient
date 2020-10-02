@@ -143,3 +143,25 @@ class CDNEndpoints(HttpClient):
         """
 
         return self._request('DELETE', f'cdn/endpoints/{endpoint_id}')
+
+    def purge(self, endpoint_id, files):
+        """
+        Purge cached content from CDN endpoint.
+
+        Parameters
+        ----------
+        endpoint_id : str
+            The ID of the specified CDN endpoint.
+        files : list
+            List of files to be purged.
+
+        Raises
+        ------
+        digitaloceanclient.exceptions.APIError
+        """
+
+        if type(files) != list:
+            files = [files]
+        path = f'cdn/endpoints/{endpoint_id}/cache'
+        payload = {'files': files}
+        return self._request('DELETE', path, payload=payload)
