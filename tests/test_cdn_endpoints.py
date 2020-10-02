@@ -60,3 +60,28 @@ def test_retrieve_existing_cdn_endpoint(client, load_json):
 
     endpoint = client.cdn_endpoints.get('19f06b6a-3ace-4315-b086-499a0e521b76')
     assert cdn_endpoint_model_matches(endpoint, json_response['endpoint'])
+
+
+@responses.activate
+def test_update_endpoint(client, load_json):
+    json_response = load_json('cdn_endpoint_202_accepted.json')
+    responses.add(
+        responses.PUT,
+        'https://api.digitalocean.com/v2/cdn/endpoints/19f06b6a-3ace-4315-b086-499a0e521b76',
+        json=json_response,
+        status=202,
+    )
+
+    endpoint = client.cdn_endpoints.update(
+        endpoint_id='19f06b6a-3ace-4315-b086-499a0e521b76',
+        certificate_id='892071a0-bb95-49bc-8021-3afd67a210bf',
+        custom_domain='static.example.com',
+        ttl=1800,
+    )
+
+    assert responses.calls[0].request.body.decode('utf-8') == json.dumps({
+        'certificate_id': '892071a0-bb95-49bc-8021-3afd67a210bf',
+        'custom_domain': 'static.example.com',
+        'ttl': 1800,
+    })
+    assert cdn_endpoint_model_matches(endpoint, json_response['endpoint'])

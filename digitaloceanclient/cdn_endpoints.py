@@ -80,7 +80,22 @@ class CDNEndpoints(HttpClient):
         ------
         digitaloceanclient.exceptions.APIError
         """
+
         response = self._request('GET', f'cdn/endpoints/{endpoint_id}')
+        try:
+            return self.model(response['endpoint'])
+        except (KeyError, ValueError, TypeError):
+            raise MalformedResponse(f'Malformed response for CDNEndpoint.')
+
+    def update(self, endpoint_id, certificate_id=None, custom_domain=None, ttl=None):
+        payload = {}
+        if certificate_id:
+            payload['certificate_id'] = certificate_id
+        if custom_domain:
+            payload['custom_domain'] = custom_domain
+        if ttl:
+            payload['ttl'] = ttl
+        response = self._request('PUT', f'cdn/endpoints/{endpoint_id}', payload=payload)
         try:
             return self.model(response['endpoint'])
         except (KeyError, ValueError, TypeError):
