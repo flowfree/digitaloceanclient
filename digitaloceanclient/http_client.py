@@ -95,7 +95,7 @@ class HttpClient(object):
             model_name = self.model.__name__.lower()
             return self.model(response[model_name])
         except (KeyError, ValueError, TypeError):
-            raise MalformedResponse(f'Malformed response for {model_name.title()}')
+            raise MalformedResponse(f'Malformed response for {model_name}')
 
     def get(self, resource_id):
         """
