@@ -85,3 +85,15 @@ def test_update_endpoint(client, load_json):
         'ttl': 1800,
     })
     assert cdn_endpoint_model_matches(endpoint, json_response['endpoint'])
+
+
+@responses.activate
+def test_delete_endpoint(client):
+    responses.add(
+        responses.DELETE,
+        'https://api.digitalocean.com/v2/cdn/endpoints/19f06b6a-3ace-4315-b086-499a0e521b76',
+        status=204
+    )
+
+    response = client.cdn_endpoints.delete('19f06b6a-3ace-4315-b086-499a0e521b76')
+    assert response == None

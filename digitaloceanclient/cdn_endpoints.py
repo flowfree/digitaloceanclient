@@ -127,3 +127,19 @@ class CDNEndpoints(HttpClient):
             return self.model(response['endpoint'])
         except (KeyError, ValueError, TypeError):
             raise MalformedResponse(f'Malformed response for CDNEndpoint.')
+
+    def delete(self, endpoint_id):
+        """
+        Delete a CDN endpoint.
+
+        Parameters
+        ----------
+        endpoint_id : str
+            The ID of the specified CDN endpoint.
+
+        Raises
+        ------
+        digitaloceanclient.exceptions.APIError
+        """
+
+        return self._request('DELETE', f'cdn/endpoints/{endpoint_id}')
