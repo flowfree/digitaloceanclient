@@ -88,6 +88,33 @@ class CDNEndpoints(HttpClient):
             raise MalformedResponse(f'Malformed response for CDNEndpoint.')
 
     def update(self, endpoint_id, certificate_id=None, custom_domain=None, ttl=None):
+        """
+        Update existing CDN endpoint.
+
+        Parameters
+        ----------
+        endpoint_id : str
+            The ID of the CDN endpoint to be updated.
+        certificate_id : str, optional
+            The ID of a DigitalOcean managed TLS certificate used for SSL when 
+            a custom subdomain is provided.
+        custom_domain : str, optional
+            The fully qualified domain name (FQDN) of the custom subdomain to 
+            be used with the CDN Endpoint. When used, a certificate_id must be 
+            provided as well.
+        ttl : int, optional
+            The amount of time the content is cached by the CDN's edge servers 
+            in seconds. Defaults to 3600s.
+
+        Returns
+        -------
+        digitaloceanclient.models.CDNEndpoint
+
+        Raises
+        ------
+        digitaloceanclient.exceptions.APIError
+        """
+
         payload = {}
         if certificate_id:
             payload['certificate_id'] = certificate_id
