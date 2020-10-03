@@ -57,3 +57,4 @@ working/
 .env
 env
 venv
+Pipfile.lock
