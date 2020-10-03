@@ -1,4 +1,4 @@
-from . import Model
+from .model import Model
 from .region import Region
 
 
@@ -21,7 +21,7 @@ class Volume(Model):
     size_gigabytes : int
         The size of the block storage volume in GiB (1024^3).
     created_at : str
-        A time value given in ISO8601 combined date and time format that 
+        A time value given in ISO8601 combined date and time format that
         represents when the block storage volume was created.
     filesystem_type : str
         The type of filesystem currently in-use on the volume.

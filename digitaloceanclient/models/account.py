@@ -1,4 +1,4 @@
-from . import Model
+from .model import Model
 
 
 class Account(Model):
@@ -10,7 +10,8 @@ class Account(Model):
     uuid : str
         The unique universal identifier for the current user
     droplet_limit : int
-        Total number of Droplets the current user or team may have at one time
+        Total number of Droplets the current user or team may have
+        at one time
     floating_ip_limit : int
         Total number of floating IPs the current user or team may have
     volume_limit : int
@@ -22,7 +23,8 @@ class Account(Model):
     status : str
         The current user's status: "active", "warning", "locked"
     status_message : str
-        A human-readable message giving more details about the status of the account
+        A human-readable message giving more details about the status
+        of the account
     """
 
     STATUS_ACTIVE = 'active'

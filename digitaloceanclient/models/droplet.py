@@ -1,4 +1,4 @@
-from . import Model
+from .model import Model
 from .kernel import Kernel
 from .image import Image
 from .region import Region

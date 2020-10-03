@@ -1,4 +1,4 @@
-from . import Model
+from .model import Model
 from .region import Region
 
 
@@ -11,15 +11,18 @@ class DropletAction(Model):
     id : str
         The unique identifier for the action.
     status : str
-        The current status of the action. Valid values: in-progress, completed, errored.
+        The current status of the action. Valid values: in-progress,
+        completed, errored.
     type : str
-        The type of action that the event is executing (reboot, power_off, etc.)
+        The type of action that the event is executing
+        (reboot, power_off, etc.)
     started_at : str
         When the action was initiated
     completed_at : str
         When the action was completed
     resource_id : str
-        A unique identifier for the resource that the action is associated with.
+        A unique identifier for the resource that the action is
+        associated with.
     resource_type : str
         The type of resource that the action is associated with.
     region : digitaloceanclient.models.Region

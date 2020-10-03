@@ -1,4 +1,4 @@
-from . import Model
+from .model import Model
 from .region import Region
 
 
@@ -23,7 +23,7 @@ class FloatingIPAction(Model):
     resource_type : str
         The type of resource that the action is associated with
     region : digitaloceanclient.models.Region
-        Full region object containing information about the region 
+        Full region object containing information about the region
         where the action occurred.
     region_slug : str
         The slug for the region object

@@ -1,4 +1,4 @@
-from . import Model 
+from .model import Model 
 from .droplet import Droplet
 from .region import Region
 

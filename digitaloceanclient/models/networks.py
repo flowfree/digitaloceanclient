@@ -1,4 +1,4 @@
-from . import Model
+from .model import Model
 
 
 class Networks(Model):
@@ -11,7 +11,6 @@ class Networks(Model):
     v6 : list
     """
 
-
     class NetworkItem(Model):
         def __init__(self, data):
             self.ip_address = ''
@@ -22,7 +21,6 @@ class Networks(Model):
 
         def __str__(self):
             return self.ip_address
-
 
     def __init__(self, data):
         """

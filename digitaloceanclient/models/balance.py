@@ -1,4 +1,4 @@
-from . import Model
+from .model import Model
 
 
 class Balance(Model):

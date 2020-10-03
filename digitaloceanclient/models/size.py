@@ -1,4 +1,4 @@
-from . import Model
+from .model import Model
 
 
 class Size(Model):
@@ -14,16 +14,18 @@ class Size(Model):
     vcpus : int
         The number of CPUs allocated to Droplets of this size
     disk : int
-        The amount of disk space set aside for Droplets of this size in gigabytes
+        The amount of disk space set aside for Droplets of this
+        size in gigabytes
     transfer : float
-        The amount of transfer bandwidth that is available for Droplets 
+        The amount of transfer bandwidth that is available for Droplets
         created in this size in terabytes
     price_monthly : float
         Monthly cost of this Droplet size in USD
     price_hourly : float
-        Hourly cost of this Droplet size in USD 
+        Hourly cost of this Droplet size in USD
     regions : list
-        An array containing the region slugs where this size is available for Droplet creates
+        An array containing the region slugs where this size is
+        available for Droplet creates
     available : bool
         Whether new Droplets can be created with this size
     """
@@ -49,6 +51,6 @@ class Size(Model):
         super().__init__(data)
 
     def __str__(self):
-        return (f'Monthly price=${self.price_monthly}, ' 
+        return (f'Monthly price=${self.price_monthly}, '
                 f'CPU={self.vcpus}, Memory={self.memory} MB, '
                 f'Disk={self.disk} GB, Transfer={self.transfer} TB')

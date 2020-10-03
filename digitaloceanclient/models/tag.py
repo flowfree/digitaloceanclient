@@ -1,4 +1,5 @@
-from . import Model 
+from .model import Model
+
 
 class Tag(Model):
     """
@@ -13,14 +14,11 @@ class Tag(Model):
         and resource statistics.
     """
 
-
     class Resources(Model):
-
 
         class Item(Model):
             count = 0
             last_tagged_uri = None
-
 
         def __init__(self, data):
             self.count = 0
@@ -33,13 +31,12 @@ class Tag(Model):
 
             super().__init__(data)
 
-            for attrib in ['droplets', 'images', 'volumes', 
+            for attrib in ['droplets', 'images', 'volumes',
                            'volume_snapshots', 'databases']:
                 try:
                     setattr(self, attrib, Tag.Resources.Item(data[attrib]))
                 except (KeyError, ValueError):
                     pass
-
 
     def __init__(self, data):
         """

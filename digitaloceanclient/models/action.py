@@ -1,4 +1,4 @@
-from . import Model 
+from .model import Model
 from .region import Region
 
 
@@ -59,7 +59,7 @@ class Action(Model):
 
     def is_in_progress(self):
         return self.status == self.STATUS_IN_PROGRESS
-    
+
     def is_completed(self):
         return self.status == self.STATUS_COMPLETED
 

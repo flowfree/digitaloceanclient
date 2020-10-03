@@ -1,4 +1,4 @@
-from . import Model
+from .model import Model
 
 
 class Image(Model):
@@ -12,11 +12,12 @@ class Image(Model):
     name : str
         The display name for the Image
     type : str
-        Describes the kind of image. It may be one of "snapshot", "backup", or "custom"
+        Describes the kind of image. It may be one of "snapshot",
+        "backup", or "custom"
     distribution : str
         Describes the base distribution used for this image
     slug : str
-        A uniquely identifying string that is associated with each of the 
+        A uniquely identifying string that is associated with each of the
         DigitalOcean-provided public images.
     public : bool
         Whether this image is public or not.
@@ -31,12 +32,13 @@ class Image(Model):
     description : str
         An optional free-form text field to describe an image.
     tags : list
-        An array containing the names of the tags the image has been tagged with.
+        An array containing the names of the tags the image has been
+        tagged with.
     status : str
-        A status string indicating the state of a custom image. 
+        A status string indicating the state of a custom image.
         This may be "NEW", "available", "pending", or "deleted".
     error_message : str
-        A string containing information about errors that may occur 
+        A string containing information about errors that may occur
         when importing a custom image.
     """
 
