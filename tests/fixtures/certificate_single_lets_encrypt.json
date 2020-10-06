@@ -1,0 +1,15 @@
+{
+  "certificate": {
+    "id": "3d2ead39-0a07-452a-be56-d9c5d1cd432c",
+    "name": "le-cert-01",
+    "not_after": "0001-01-01T00:00:00Z",
+    "sha1_fingerprint": "",
+    "created_at": "2019-05-01T19:11:39Z",
+    "dns_names": [
+      "www.example.com",
+      "example.com"
+    ],
+    "state": "pending",
+    "type": "lets_encrypt"
+  }
+}
