@@ -1,3 +1,5 @@
+import json 
+
 import responses
 
 from .models.test_certificate import certificate_model_matches
@@ -18,3 +20,31 @@ def test_list_all_certificates(client, load_json):
     for expected in json_response['certificates']:
         certificate = next(rows)
         assert certificate_model_matches(certificate, expected)
+
+
+@responses.activate
+def test_create_new_custom_certificate(client, load_json):
+    json_response = load_json('certificate_single.json')
+    responses.add(
+        responses.POST,
+        'https://api.digitalocean.com/v2/certificates',
+        json=json_response,
+        status=201,
+    )
+
+    certificate = client.certificates.create(
+        type_='custom',
+        name='web-cert-01',
+        private_key='<contents_of_private_key>',
+        leaf_certificate='<contents_of_leaf_certificate>',
+        certificate_chain='<contents_of_certificate_chain>'
+    )
+
+    assert certificate_model_matches(certificate, json_response['certificate'])
+    assert responses.calls[0].request.body.decode('utf-8') == json.dumps({
+        'type': 'custom',
+        'name': 'web-cert-01',
+        'private_key': '<contents_of_private_key>',
+        'leaf_certificate': '<contents_of_leaf_certificate>',
+        'certificate_chain': '<contents_of_certificate_chain>'
+    })
