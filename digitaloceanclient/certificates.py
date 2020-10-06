@@ -74,8 +74,25 @@ class Certificates(HttpClient):
 
         return super().create(payload=payload)
 
-    def get(self, *args, **kwargs):
-        raise NotImplementedError
+    def get(self, certificate_id):
+        """
+        Retrieve existing certificate.
+
+        Parameters
+        ----------
+        certificate_id : str
+            The ID of the specified certificate.
+
+        Returns
+        -------
+        digitaloceanclient.models.Certificate
+
+        Raises
+        ------
+        digitaloceanclient.exceptions.APIError
+        """
+
+        return super().get(resource_id=certificate_id)
 
     def update(self, *args, **kwargs):
         raise NotImplementedError
