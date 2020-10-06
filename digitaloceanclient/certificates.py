@@ -3,6 +3,10 @@ from .models import Certificate
 
 
 class Certificates(HttpClient):
+    """
+    Create, read, and delete certificates.
+    """
+
     model = Certificate
 
     def all(self):
@@ -94,8 +98,21 @@ class Certificates(HttpClient):
 
         return super().get(resource_id=certificate_id)
 
-    def update(self, *args, **kwargs):
-        raise NotImplementedError
+    def delete(self, certificate_id):
+        """
+        Delete a certificate.
 
-    def delete(self, *args, **kwargs):
+        Parameters
+        ----------
+        certificate_id : str
+            The ID of the specified certificate.
+
+        Raises
+        ------
+        digitaloceanclient.exceptions.APIError
+        """
+
+        return super().delete(resource_id=certificate_id)
+
+    def update(self, *args, **kwargs):
         raise NotImplementedError

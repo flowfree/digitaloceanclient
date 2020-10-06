@@ -106,3 +106,24 @@ def test_retrieve_existing_certificate(client, load_json):
 
     cert = client.certificates.get('1234567')
     assert certificate_model_matches(cert, json_response['certificate'])
+
+
+def test_update_is_not_supported(client):
+    with pytest.raises(NotImplementedError) as e:
+        client.certificates.update('aaa', 'bbb', 'ccc')
+
+
+@responses.activate
+def test_delete_certificate(client):
+    responses.add(
+        responses.DELETE,
+        'https://api.digitalocean.com/v2/certificates/1234567',
+        status=204,
+    )
+
+    cert = client.certificates.delete('1234567')
+
+    assert cert is None
+    assert responses.calls[0].request.method == 'DELETE'
+    assert responses.calls[0].request.url == \
+           'https://api.digitalocean.com/v2/certificates/1234567'
