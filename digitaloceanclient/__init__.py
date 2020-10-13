@@ -2,6 +2,7 @@ from .account import Account
 from .actions import Actions
 from .cdn_endpoints import CDNEndpoints
 from .certificates import Certificates
+from .domains import Domains
 from .droplets import Droplets 
 from .exceptions import (
     APIError, BadRequest, MalformedResponse, NotFound, RateLimitExceeded, 
@@ -25,6 +26,7 @@ class DigitalOceanClient(object):
         self.actions = Actions(access_token)
         self.cdn_endpoints = CDNEndpoints(access_token)
         self.certificates = Certificates(access_token)
+        self.domains = Domains(access_token)
         self.droplets = Droplets(access_token)
         self.images = Images(access_token)
         self.regions = Regions(access_token)
