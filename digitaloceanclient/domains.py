@@ -32,6 +32,14 @@ class Domains(HttpClient):
         ip_address: str, optional
             When provided, an A record will be automatically created 
             pointing to the domain.
+
+        Returns
+        -------
+        digitaloceanclient.models.Domain
+
+        Raises
+        ------
+        digitaloceanclient.exceptions.APIError
         """
 
         payload = {'name': name}
@@ -39,8 +47,25 @@ class Domains(HttpClient):
             payload['ip_address'] = ip_address
         return super().create(payload=payload)
 
-    def get(self, *args, **kwargs):
-        raise NotImplementedError
+    def get(self, name):
+        """
+        Retrieve existing domain.
+
+        Parameters
+        ----------
+        name : str
+            The name of the domain
+
+        Returns
+        -------
+        digitaloceanclient.models.Domain
+
+        Raises
+        ------
+        digitaloceanclient.exceptions.APIError
+        """
+
+        return super().get(resource_id=name)
 
     def update(self, *args, **kwargs):
         raise NotImplementedError

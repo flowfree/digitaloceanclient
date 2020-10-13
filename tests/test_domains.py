@@ -51,3 +51,26 @@ def test_create_new_domain(client, load_json):
     assert domain.name == expected['name']
     assert domain.ttl == expected['ttl']
     assert domain.zone_file == expected['zone_file']
+
+
+@responses.activate
+def test_retrieve_existing_domain(client, load_json):
+    json_response = load_json('domain_single.json')
+    responses.add(
+        responses.GET,
+        'https://api.digitalocean.com/v2/domains/example.com',
+        json=json_response,
+        status=200,
+    )
+
+    domain = client.domains.get(name='example.com')
+
+    assert len(responses.calls) == 1
+    assert responses.calls[0].request.method == 'GET'
+    assert responses.calls[0].request.url == \
+           'https://api.digitalocean.com/v2/domains/example.com'
+
+    expected = json_response['domain']
+    assert domain.name == expected['name']
+    assert domain.ttl == expected['ttl']
+    assert domain.zone_file == expected['zone_file']
