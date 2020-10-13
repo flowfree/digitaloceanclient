@@ -1,5 +1,6 @@
 import json 
 
+import pytest
 import responses 
 
 
@@ -74,3 +75,8 @@ def test_retrieve_existing_domain(client, load_json):
     assert domain.name == expected['name']
     assert domain.ttl == expected['ttl']
     assert domain.zone_file == expected['zone_file']
+
+
+def test_update_is_not_supported(client):
+    with pytest.raises(NotImplementedError) as e:
+        client.domains.update(name='updated.com')
