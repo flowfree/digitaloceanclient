@@ -17,10 +17,27 @@ class Domains(HttpClient):
         ------
         digitaloceanclient.exceptions.APIError
         """
+
         return super().all()
 
-    def create(self, *args, **kwargs):
-        raise NotImplementedError
+    def create(self, name, ip_address=None):
+        """
+        Create a new domain.
+
+        Parameters
+        ----------
+        name : str
+            The domain name to add to the DigitalOcean DNS management 
+            interface.
+        ip_address: str, optional
+            When provided, an A record will be automatically created 
+            pointing to the domain.
+        """
+
+        payload = {'name': name}
+        if ip_address:
+            payload['ip_address'] = ip_address
+        return super().create(payload=payload)
 
     def get(self, *args, **kwargs):
         raise NotImplementedError
