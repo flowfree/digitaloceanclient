@@ -115,3 +115,46 @@ def test_retrieve_existing_domain_record(client, load_json):
     assert responses.calls[0].request.url == \
            'https://api.digitalocean.com/v2/domains/example.com/records/3352896'
     assert domain_record_model_matches(record, json_response['domain_record'])
+
+
+@responses.activate
+def test_update_domain_record(client, load_json):
+    json_response = load_json('domain_record_single.json')
+    responses.add(
+        responses.PUT,
+        'https://api.digitalocean.com/v2/domains/example.com/records/3352896',
+        json=json_response,
+        status=200,
+    )
+
+    record = client.domain_records.update(
+        for_domain='example.com',
+        id_='3352896',
+        name='blog',
+    )
+
+    assert len(responses.calls) == 1
+    assert responses.calls[0].request.method == 'PUT'
+    assert responses.calls[0].request.url == \
+           'https://api.digitalocean.com/v2/domains/example.com/records/3352896'
+    assert responses.calls[0].request.body.decode('utf-8') == json.dumps({
+        'name': 'blog',
+    })
+    assert domain_record_model_matches(record, json_response['domain_record'])
+
+
+@responses.activate
+def test_delete_domain_record(client):
+    responses.add(
+        responses.DELETE,
+        'https://api.digitalocean.com/v2/domains/example.com/records/3352896',
+        status=204,
+    )
+
+    response = client.domain_records.delete(for_domain='example.com', id_='3352896')
+
+    assert len(responses.calls) == 1
+    assert responses.calls[0].request.method == 'DELETE'
+    assert responses.calls[0].request.url == \
+           'https://api.digitalocean.com/v2/domains/example.com/records/3352896'
+    assert response is None

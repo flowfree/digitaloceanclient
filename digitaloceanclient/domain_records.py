@@ -125,8 +125,9 @@ class DomainRecords(HttpClient):
         path = f'domains/{for_domain}/records'
         return super().get(path=path, resource_id=id_)
 
-    def update(self, for_domain, type_, name=None, data=None, priority=None,
-               port=None, ttl=None, weight=None, flags=None, tag=None):
+    def update(self, for_domain, id_, type_=None, name=None, data=None, 
+               priority=None, port=None, ttl=None, weight=None, flags=None,
+               tag=None):
         """
         Update existing domain record.
 
@@ -134,7 +135,7 @@ class DomainRecords(HttpClient):
         ----------
         for_domain : str
             The domain where the record exist.
-        type_ : str
+        type_ : str, optional
             The record type.
         name : str, optional
             The host name, alias, or service being defined by the record.
@@ -168,9 +169,28 @@ class DomainRecords(HttpClient):
         digitaloceanclient.exceptions.APIError
         """
 
-        raise NotImplementedError
+        payload = {} 
+        if name:
+            payload['name'] = name
+        if data:
+            payload['data'] = data
+        if priority:
+            payload['priority'] = priority
+        if port:
+            payload['port'] = port
+        if ttl:
+            payload['ttl'] = ttl
+        if weight:
+            payload['weight'] = weight
+        if flags:
+            payload['flags'] = flags
+        if tag:
+            payload['tag'] = tag
+        
+        path = f'domains/{for_domain}/records'
+        return super().update(resource_id=id_, payload=payload, path=path)
 
-    def delete(self, for_domain, record_id):
+    def delete(self, for_domain, id_):
         """
         Delete a domain record.
 
@@ -178,7 +198,7 @@ class DomainRecords(HttpClient):
         ----------
         for_domain : str
             The domain name where this record exist.
-        record_id : str
+        id_ : str
             The identifier for the domain record.
 
         Raises
@@ -186,4 +206,5 @@ class DomainRecords(HttpClient):
         digitaloceanclient.exceptions.APIError
         """
 
-        raise NotImplementedError
+        path = f'domains/{for_domain}/records'
+        return super().delete(resource_id=id_, path=path)
