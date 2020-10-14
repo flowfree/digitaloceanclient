@@ -29,7 +29,7 @@ class HttpClient(object):
         """
         self.access_token = access_token
 
-    def all(self, path=None, params=None):
+    def all(self, path=None, params=None, json_key=None):
         """
         Retrieve the collection of a resource.
 
@@ -40,6 +40,8 @@ class HttpClient(object):
             from the class name.
         params : dict, optional
             The querystring of the request URL.
+        json_key : str, optional
+            The key in the JSON response that contains the resultset.
 
         Yields
         ------
@@ -58,8 +60,9 @@ class HttpClient(object):
             next_url = resource_name
         while True:
             response = self._request('GET', next_url, params)
-            key = urlparse(next_url).path.split('/')[-1]
-            for row in response.get(key, []):
+            if not json_key:
+                json_key = urlparse(next_url).path.split('/')[-1]
+            for row in response.get(json_key, []):
                 yield self.model(row)
             try:
                 next_url = response['links']['pages']['next']
@@ -92,9 +95,10 @@ class HttpClient(object):
             path = self.__class__.__name__.lower()
         response = self._request('POST', path, payload=payload)
         try:
-            model_name = self.model.__name__.lower()
-            return self.model(response[model_name])
+            json_key = self.model.json_key()
+            return self.model(response[json_key])
         except (KeyError, ValueError, TypeError):
+            model_name = self.model.__name__.lower()
             raise MalformedResponse(f'Malformed response for {model_name}')
 
     def get(self, resource_id):
@@ -119,10 +123,10 @@ class HttpClient(object):
         resource_name = self.__class__.__name__.lower()
         response = self._request('GET', f'{resource_name}/{resource_id}')
         try:
-            model_name = self.model.__name__.lower()
-            return self.model(response[model_name])
+            json_key = self.model.json_key()
+            return self.model(response[json_key])
         except (KeyError, ValueError, TypeError):
-            raise MalformedResponse(f'Malformed response for {model_name.title()}')
+            raise MalformedResponse(f'Malformed response for {resource_name}')
 
     def update(self, resource_id, payload=None):
         """
@@ -148,9 +152,10 @@ class HttpClient(object):
         resource_name = self.__class__.__name__.lower()
         response = self._request('PUT', f'{resource_name}/{resource_id}', payload=payload)
         try:
-            model_name = self.model.__name__.lower()
-            return self.model(response[model_name])
+            json_key = self.model.json_key()
+            return self.model(response[json_key])
         except (KeyError, ValueError, TypeError):
+            model_name = self.model.__name__.lower()
             raise MalformedResponse(f'Malformed response for {model_name.title()}')
 
     def delete(self, resource_id):

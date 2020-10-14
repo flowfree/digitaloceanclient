@@ -31,20 +31,13 @@ class DomainRecords(HttpClient):
         digitaloceanclient.exceptions.APIError
         """
 
-        next_url = f'domains/{for_domain}/records'
+        path = f'domains/{for_domain}/records'
         params = {}
         if name:
             params['name'] = name
         if type_:
             params['type'] = type_
-        while True:
-            response = self._request('GET', next_url, params)
-            for row in response.get('domain_records', []):
-                yield self.model(row)
-            try:
-                next_url = response['links']['pages']['next']
-            except KeyError:
-                break
+        return super().all(path=path, params=params, json_key='domain_records')
 
     def create(self, for_domain, type_, name=None, data=None, priority=None,
                port=None, ttl=None, weight=None, flags=None, tag=None):
@@ -89,7 +82,25 @@ class DomainRecords(HttpClient):
         digitaloceanclient.exceptions.APIError
         """
 
-        raise NotImplementedError
+        path = f'domains/{for_domain}/records'
+        payload = {'type': type_}
+        if name:
+            payload['name'] = name
+        if data:
+            payload['data'] = data
+        if priority:
+            payload['priority'] = priority
+        if port:
+            payload['port'] = port
+        if ttl:
+            payload['ttl'] = ttl
+        if weight:
+            payload['weight'] = weight
+        if flags:
+            payload['flags'] = flags
+        if tag:
+            payload['tag'] = tag
+        return super().create(path=path, payload=payload)
 
     def get(self, for_domain, record_id):
         """

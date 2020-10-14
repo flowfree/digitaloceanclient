@@ -26,3 +26,7 @@ class Model(object):
         else:
             class_name = self.__class__.__name__
             return f'{class_name} Instance'
+
+    @classmethod
+    def json_key(cls):
+        return cls.__name__.lower()

@@ -1,3 +1,5 @@
+import json 
+
 import pytest
 import responses
 
@@ -63,3 +65,34 @@ def test_filter_domain_records(client, load_json):
     assert responses.calls[2].request.url == \
            'https://api.digitalocean.com/v2' \
            '/domains/example.com/records?name=sub.example.com&type=MX'
+
+
+@responses.activate
+def test_create_new_domain_record(client, load_json):
+    json_response = load_json('domain_record_single.json')
+    responses.add(
+        responses.POST,
+        'https://api.digitalocean.com/v2/domains/example.com/records',
+        json=json_response,
+        status=201,
+    )
+
+    record = client.domain_records.create(
+        for_domain='example.com',
+        type_='A',
+        name='www',
+        data='162.10.66.0',
+        ttl=1800,
+    )
+
+    assert domain_record_model_matches(record, json_response['domain_record'])
+    assert len(responses.calls) == 1
+    assert responses.calls[0].request.method == 'POST'
+    assert responses.calls[0].request.url == \
+           'https://api.digitalocean.com/v2/domains/example.com/records'
+    assert responses.calls[0].request.body.decode('utf-8') == json.dumps({
+        'type': 'A',
+        'name': 'www',
+        'data': '162.10.66.0',
+        'ttl': 1800,
+    })
