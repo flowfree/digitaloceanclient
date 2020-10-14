@@ -96,3 +96,22 @@ def test_create_new_domain_record(client, load_json):
         'data': '162.10.66.0',
         'ttl': 1800,
     })
+
+
+@responses.activate
+def test_retrieve_existing_domain_record(client, load_json):
+    json_response = load_json('domain_record_single.json')
+    responses.add(
+        responses.GET,
+        'https://api.digitalocean.com/v2/domains/example.com/records/3352896',
+        json=json_response,
+        status=200,
+    )
+
+    record = client.domain_records.get(for_domain='example.com', id_='3352896')
+
+    assert len(responses.calls) == 1
+    assert responses.calls[0].request.method == 'GET'
+    assert responses.calls[0].request.url == \
+           'https://api.digitalocean.com/v2/domains/example.com/records/3352896'
+    assert domain_record_model_matches(record, json_response['domain_record'])

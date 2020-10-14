@@ -102,7 +102,7 @@ class DomainRecords(HttpClient):
             payload['tag'] = tag
         return super().create(path=path, payload=payload)
 
-    def get(self, for_domain, record_id):
+    def get(self, for_domain, id_):
         """
         Retrieve an existing domain record.
 
@@ -110,7 +110,7 @@ class DomainRecords(HttpClient):
         ----------
         for_domain : str
             The domain name where this record exist.
-        record_id : str
+        id_ : str
             The identifier for the domain record.
 
         Returns
@@ -122,7 +122,8 @@ class DomainRecords(HttpClient):
         digitaloceanclient.exceptions.APIError
         """
 
-        raise NotImplementedError
+        path = f'domains/{for_domain}/records'
+        return super().get(path=path, resource_id=id_)
 
     def update(self, for_domain, type_, name=None, data=None, priority=None,
                port=None, ttl=None, weight=None, flags=None, tag=None):

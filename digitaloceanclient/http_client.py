@@ -101,7 +101,7 @@ class HttpClient(object):
             model_name = self.model.__name__.lower()
             raise MalformedResponse(f'Malformed response for {model_name}')
 
-    def get(self, resource_id):
+    def get(self, resource_id, path=None):
         """
         Retrieve a resource.
 
@@ -109,6 +109,9 @@ class HttpClient(object):
         ----------
         resource_id : str
             The ID of the specified resource.
+        path : str, optional
+            The path of the API endpoint. If not supplied, it will be 
+            determined from the resource class name.
 
         Returns
         -------
@@ -121,7 +124,9 @@ class HttpClient(object):
         """
 
         resource_name = self.__class__.__name__.lower()
-        response = self._request('GET', f'{resource_name}/{resource_id}')
+        if not path:
+            path = resource_name
+        response = self._request('GET', f'{path}/{resource_id}')
         try:
             json_key = self.model.json_key()
             return self.model(response[json_key])
