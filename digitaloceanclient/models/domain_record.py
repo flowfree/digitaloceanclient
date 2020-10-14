@@ -64,3 +64,7 @@ class DomainRecord(Model):
         self.tag = None
 
         super().__init__(data)
+
+    @classmethod
+    def json_key(cls):
+        return 'domain_record'

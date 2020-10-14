@@ -44,6 +44,7 @@ Thumbs.db
 #######
 bower_components
 celerybeat-schedule.*
+*.ipynb
 
 # Working directory #
 #####################
@@ -54,7 +55,9 @@ working/
 .idea/
 .vendors/
 .vscode/
+.ipynb_checkpoints/
 .env
 env
 venv
 Pipfile.lock
+

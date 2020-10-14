@@ -16,14 +16,17 @@ def test_load_from_json():
     }
 
     record = DomainRecord(data)
+    assert domain_record_model_matches(record, data)
 
-    assert record.id == data['id']
-    assert record.type == data['type']
-    assert record.name == data['name']
-    assert record.data == data['data']
-    assert record.priority == data['priority']
-    assert record.port == data['port']
-    assert record.ttl == data['ttl']
-    assert record.weight == data['weight']
-    assert record.flags == data['flags']
-    assert record.tag == data['tag']
+
+def domain_record_model_matches(record, data):
+    return record.id == data['id'] and \
+           record.type == data['type'] and \
+           record.name == data['name'] and \
+           record.data == data['data'] and \
+           record.priority == data['priority'] and \
+           record.port == data['port'] and \
+           record.ttl == data['ttl'] and \
+           record.weight == data['weight'] and \
+           record.flags == data['flags'] and \
+           record.tag == data['tag']
