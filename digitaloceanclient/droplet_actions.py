@@ -297,7 +297,7 @@ class DropletActions(HttpClient):
 
     def restore(self, droplet_id, image_slug):
         """
-        Power on a Droplet.
+        Restore a Droplet.
 
         Parameters
         ----------
@@ -363,7 +363,7 @@ class DropletActions(HttpClient):
 
     def rebuild(self, droplet_id, image_slug):
         """
-        Power on a Droplet.
+        Rebuild a Droplet.
 
         Parameters
         ----------
@@ -385,7 +385,7 @@ class DropletActions(HttpClient):
 
     def rename(self, droplet_id, name):
         """
-        Power on a Droplet.
+        Rename a Droplet.
 
         Parameters
         ----------
