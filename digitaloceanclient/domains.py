@@ -3,6 +3,10 @@ from .models import Domain
 
 
 class Domains(HttpClient):
+    """
+    List, create, and delete domains.
+    """
+
     model = Domain
 
     def all(self):
@@ -67,8 +71,21 @@ class Domains(HttpClient):
 
         return super().get(resource_id=name)
 
-    def update(self, *args, **kwargs):
-        raise NotImplementedError
+    def delete(self, name):
+        """
+        Delete a domain.
 
-    def delete(self, *args, **kwargs):
+        Parameters
+        ----------
+        name : str
+            The name of the domain
+
+        Raises
+        ------
+        digitaloceanclient.exceptions.APIError
+        """
+
+        return super().delete(resource_id=name)
+
+    def update(self, *args, **kwargs):
         raise NotImplementedError

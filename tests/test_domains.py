@@ -80,3 +80,20 @@ def test_retrieve_existing_domain(client, load_json):
 def test_update_is_not_supported(client):
     with pytest.raises(NotImplementedError) as e:
         client.domains.update(name='updated.com')
+
+
+@responses.activate
+def test_delete_domain(client):
+    responses.add(
+        responses.DELETE,
+        'https://api.digitalocean.com/v2/domains/example.com',
+        status=204,
+    )
+
+    response = client.domains.delete(name='example.com')
+
+    assert len(responses.calls) == 1
+    assert responses.calls[0].request.method == 'DELETE'
+    assert responses.calls[0].request.url == \
+           'https://api.digitalocean.com/v2/domains/example.com'
+    assert response is None
