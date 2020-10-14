@@ -5,6 +5,7 @@ from .certificates import Certificates
 from .domains import Domains
 from .domain_records import DomainRecords
 from .droplets import Droplets 
+from .droplet_actions import DropletActions
 from .exceptions import (
     APIError, BadRequest, MalformedResponse, NotFound, RateLimitExceeded, 
     ServerError, Unauthorized, UnprocessableEntity
@@ -30,6 +31,7 @@ class DigitalOceanClient(object):
         self.domains = Domains(access_token)
         self.domain_records = DomainRecords(access_token)
         self.droplets = Droplets(access_token)
+        self.droplet_actions = DropletActions(access_token)
         self.images = Images(access_token)
         self.regions = Regions(access_token)
         self.sizes = Sizes(access_token)

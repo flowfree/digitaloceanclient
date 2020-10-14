@@ -55,3 +55,7 @@ class DropletAction(Model):
             self.region = Region(data['region'])
         except KeyError:
             pass
+
+    @classmethod
+    def json_key(cls):
+        return 'action'
