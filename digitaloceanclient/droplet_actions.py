@@ -9,6 +9,26 @@ class DropletActions(HttpClient):
 
     model = DropletAction
 
+    def get(self, action_id):
+        """
+        Retrieve a droplet action.
+
+        Parameters
+        ----------
+        action_id : str
+            The unique identifier for the droplet action.
+
+        Returns
+        -------
+        digitaloceanclient.models.DropletAction
+
+        Raises
+        ------
+        digitaloceanclient.exceptions.APIError
+        """
+
+        raise NotImplementedError
+
     def enable_backups(self, droplet_id):
         """
         Enable backups on a Droplet.
@@ -489,4 +509,16 @@ class DropletActions(HttpClient):
         digitaloceanclient.exceptions.APIError
         """
 
+        raise NotImplementedError
+
+    def all(self, *args, **kwargs):
+        raise NotImplementedError
+
+    def create(self, *args, **kwargs):
+        raise NotImplementedError
+
+    def update(self, *args, **kwargs):
+        raise NotImplementedError
+
+    def delete(self, *args, **kwargs):
         raise NotImplementedError
