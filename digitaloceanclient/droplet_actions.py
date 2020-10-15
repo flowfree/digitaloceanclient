@@ -1,3 +1,4 @@
+from .exceptions import MalformedResponse
 from .http_client import HttpClient 
 from .models import DropletAction
 
@@ -9,12 +10,14 @@ class DropletActions(HttpClient):
 
     model = DropletAction
 
-    def get(self, action_id):
+    def get(self, droplet_id, action_id):
         """
         Retrieve a droplet action.
 
         Parameters
         ----------
+        droplet_id : str
+            The ID of the droplet where this action takes place.
         action_id : str
             The unique identifier for the droplet action.
 
@@ -27,7 +30,8 @@ class DropletActions(HttpClient):
         digitaloceanclient.exceptions.APIError
         """
 
-        raise NotImplementedError
+        path = f'droplets/{droplet_id}/actions/{action_id}'
+        return self._request('GET', droplet_id, path=path)
 
     def enable_backups(self, droplet_id):
         """
@@ -47,7 +51,8 @@ class DropletActions(HttpClient):
         digitaloceanclient.exceptions.APIError
         """
 
-        raise NotImplementedError
+        payload = {'type': 'enable_backups'}
+        return self._request('POST', droplet_id, payload=payload)
 
     def enable_backups_for_tag(self, tag_name):
         """
@@ -68,7 +73,11 @@ class DropletActions(HttpClient):
         digitaloceanclient.exceptions.APIError
         """
 
-        raise NotImplementedError
+        path = f'droplets/actions?tag_name={tag_name}'
+        payload = {'type': 'enable_backups'}
+        return self._request(method='POST', 
+                             path=path, 
+                             payload=payload)
 
     def disable_backups(self, droplet_id):
         """
@@ -88,7 +97,8 @@ class DropletActions(HttpClient):
         digitaloceanclient.exceptions.APIError
         """
 
-        raise NotImplementedError
+        payload = {'type': 'disable_backups'}
+        return self._request('POST', droplet_id, payload=payload)
 
     def disable_backups_for_tag(self, tag_name):
         """
@@ -109,7 +119,11 @@ class DropletActions(HttpClient):
         digitaloceanclient.exceptions.APIError
         """
 
-        raise NotImplementedError
+        path = f'droplets/actions?tag_name={tag_name}'
+        payload = {'type': 'disable_backups'}
+        return self._request(method='POST', 
+                             path=path, 
+                             payload=payload)
 
     def reboot(self, droplet_id):
         """
@@ -129,7 +143,8 @@ class DropletActions(HttpClient):
         digitaloceanclient.exceptions.APIError
         """
 
-        raise NotImplementedError
+        payload = {'type': 'reboot'}
+        return self._request('POST', droplet_id, payload=payload)
 
     def power_cycle(self, droplet_id):
         """
@@ -149,7 +164,8 @@ class DropletActions(HttpClient):
         digitaloceanclient.exceptions.APIError
         """
 
-        raise NotImplementedError
+        payload = {'type': 'power_cycle'}
+        return self._request('POST', droplet_id, payload=payload)
 
     def power_cycle_for_tag(self, tag_name):
         """
@@ -170,7 +186,11 @@ class DropletActions(HttpClient):
         digitaloceanclient.exceptions.APIError
         """
 
-        raise NotImplementedError
+        path = f'droplets/actions?tag_name={tag_name}'
+        payload = {'type': 'power_cycle'}
+        return self._request(method='POST', 
+                             path=path, 
+                             payload=payload)
 
     def shutdown(self, droplet_id):
         """
@@ -190,7 +210,8 @@ class DropletActions(HttpClient):
         digitaloceanclient.exceptions.APIError
         """
 
-        raise NotImplementedError
+        payload = {'type': 'shutdown'}
+        return self._request('POST', droplet_id, payload=payload)
 
     def shutdown_for_tag(self, tag_name):
         """
@@ -211,7 +232,11 @@ class DropletActions(HttpClient):
         digitaloceanclient.exceptions.APIError
         """
 
-        raise NotImplementedError
+        path = f'droplets/actions?tag_name={tag_name}'
+        payload = {'type': 'shutdown'}
+        return self._request(method='POST', 
+                             path=path, 
+                             payload=payload)
 
     def power_off(self, droplet_id):
         """
@@ -231,7 +256,8 @@ class DropletActions(HttpClient):
         digitaloceanclient.exceptions.APIError
         """
 
-        raise NotImplementedError
+        payload = {'type': 'power_off'}
+        return self._request('POST', droplet_id, payload=payload)
 
     def power_off_for_tag(self, tag_name):
         """
@@ -252,7 +278,11 @@ class DropletActions(HttpClient):
         digitaloceanclient.exceptions.APIError
         """
 
-        raise NotImplementedError
+        path = f'droplets/actions?tag_name={tag_name}'
+        payload = {'type': 'power_off'}
+        return self._request(method='POST', 
+                             path=path, 
+                             payload=payload)
 
     def power_on(self, droplet_id):
         """
@@ -272,7 +302,8 @@ class DropletActions(HttpClient):
         digitaloceanclient.exceptions.APIError
         """
 
-        raise NotImplementedError
+        payload = {'type': 'power_on'}
+        return self._request('POST', droplet_id, payload=payload)
 
     def power_on_for_tag(self, tag_name):
         """
@@ -293,7 +324,11 @@ class DropletActions(HttpClient):
         digitaloceanclient.exceptions.APIError
         """
 
-        raise NotImplementedError
+        path = f'droplets/actions?tag_name={tag_name}'
+        payload = {'type': 'power_on'}
+        return self._request(method='POST', 
+                             path=path, 
+                             payload=payload)
 
     def restore(self, droplet_id, image_slug):
         """
@@ -315,7 +350,8 @@ class DropletActions(HttpClient):
         digitaloceanclient.exceptions.APIError
         """
 
-        raise NotImplementedError
+        payload = {'type': 'restore', 'image': image_slug}
+        return self._request('POST', droplet_id, payload=payload)
 
     def password_reset(self, droplet_id):
         """
@@ -335,9 +371,10 @@ class DropletActions(HttpClient):
         digitaloceanclient.exceptions.APIError
         """
 
-        raise NotImplementedError
+        payload = {'type': 'password_reset'}
+        return self._request('POST', droplet_id, payload=payload)
 
-    def resize(self, droplet_id, size_slug, disk=None):
+    def resize(self, droplet_id, size_slug, disk=False):
         """
         Resize a Droplet.
 
@@ -359,7 +396,13 @@ class DropletActions(HttpClient):
         digitaloceanclient.exceptions.APIError
         """
 
-        raise NotImplementedError
+        payload = {
+            'type': 'resize', 
+            'size': size_slug,
+        }
+        if disk:
+            payload['disk'] = disk
+        return self._request('POST', droplet_id, payload=payload)
 
     def rebuild(self, droplet_id, image_slug):
         """
@@ -381,7 +424,11 @@ class DropletActions(HttpClient):
         digitaloceanclient.exceptions.APIError
         """
 
-        raise NotImplementedError
+        payload = {
+            'type': 'rebuild',
+            'image': image_slug,
+        }
+        return self._request('POST', droplet_id, payload=payload)
 
     def rename(self, droplet_id, name):
         """
@@ -403,7 +450,11 @@ class DropletActions(HttpClient):
         digitaloceanclient.exceptions.APIError
         """
 
-        raise NotImplementedError
+        payload = {
+            'type': 'rename',
+            'name': name,
+        }
+        return self._request('POST', droplet_id, payload=payload)
 
     def change_kernel(self, droplet_id, kernel):
         """
@@ -425,7 +476,11 @@ class DropletActions(HttpClient):
         digitaloceanclient.exceptions.APIError
         """
 
-        raise NotImplementedError
+        payload = {
+            'type': 'change_kernel',
+            'kernel': kernel,
+        }
+        return self._request('POST', droplet_id, payload=payload)
 
     def enable_ipv6(self, droplet_id):
         """
@@ -445,7 +500,8 @@ class DropletActions(HttpClient):
         digitaloceanclient.exceptions.APIError
         """
 
-        raise NotImplementedError
+        payload = {'type': 'enable_ipv6'}
+        return self._request('POST', droplet_id, payload=payload)
 
     def enable_ipv6_for_tag(self, tag_name):
         """
@@ -466,7 +522,11 @@ class DropletActions(HttpClient):
         digitaloceanclient.exceptions.APIError
         """
 
-        raise NotImplementedError
+        path = f'droplets/actions?tag_name={tag_name}'
+        payload = {'type': 'enable_ipv6'}
+        return self._request(method='POST', 
+                             path=path, 
+                             payload=payload)
 
     def snapshot(self, droplet_id, name=None):
         """
@@ -488,7 +548,10 @@ class DropletActions(HttpClient):
         digitaloceanclient.exceptions.APIError
         """
 
-        raise NotImplementedError
+        payload = {'type': 'snapshot'}
+        if name:
+            payload['name'] = name
+        return self._request('POST', droplet_id, payload=payload)
 
     def snapshot_for_tag(self, tag_name):
         """
@@ -509,7 +572,25 @@ class DropletActions(HttpClient):
         digitaloceanclient.exceptions.APIError
         """
 
-        raise NotImplementedError
+        path = f'droplets/actions?tag_name={tag_name}'
+        payload = {'type': 'snapshot'}
+        return self._request(method='POST', 
+                             path=path, 
+                             payload=payload)
+
+    def _request(self, method, droplet_id=None, path=None, payload=None):
+        if droplet_id is None and path is None:
+            raise ValueError('Please specify droplet_id or path.')
+        if not path:
+            path = f'droplets/{droplet_id}/actions'
+        response = super()._request(method, path, payload=payload)
+        try:
+            if droplet_id:
+                return self.model(response['action'])
+            else:
+                return [self.model(x) for x in response['actions']]
+        except (KeyError, ValueError, TypeError):
+            raise MalformedResponse(f'Malformed response for Droplet Action.')
 
     def all(self, *args, **kwargs):
         raise NotImplementedError
