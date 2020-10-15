@@ -88,7 +88,8 @@ class FloatingIPs(HttpClient):
         digitaloceanclient.exceptions.APIError
         """
 
-        raise NotImplementedError
+        return super().delete(resource_id=floating_ip_addr,
+                              path='floating_ips')
 
     def update(self, *args, **kwargs):
         raise NotImplementedError

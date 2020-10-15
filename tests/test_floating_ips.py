@@ -89,3 +89,25 @@ def test_retrieve_a_floating_ip(client, load_json):
     assert responses.calls[0].request.url == \
            'https://api.digitalocean.com/v2/floating_ips/45.55.96.47'
     assert floating_ip_model_matches(floating_ip, json_response['floating_ip'])
+
+
+@responses.activate
+def test_delete_a_floating_ip(client, load_json):
+    responses.add(
+        responses.DELETE,
+        'https://api.digitalocean.com/v2/floating_ips/45.55.96.47',
+        status=204,
+    )
+
+    response = client.floating_ips.delete(floating_ip_addr='45.55.96.47')
+
+    assert len(responses.calls) == 1
+    assert responses.calls[0].request.method == 'DELETE'
+    assert responses.calls[0].request.url == \
+           'https://api.digitalocean.com/v2/floating_ips/45.55.96.47'
+    assert response is None
+
+
+def test_unsupported_methods(client):
+    with pytest.raises(NotImplementedError):
+        client.floating_ips.update('aaa', 'bbb', 'ccc')
