@@ -10,6 +10,7 @@ from .exceptions import (
     APIError, BadRequest, MalformedResponse, NotFound, RateLimitExceeded, 
     ServerError, Unauthorized, UnprocessableEntity
 )
+from .floating_ips import FloatingIPs
 from .images import Images
 from .regions import Regions
 from .sizes import Sizes
@@ -32,6 +33,7 @@ class DigitalOceanClient(object):
         self.domain_records = DomainRecords(access_token)
         self.droplets = Droplets(access_token)
         self.droplet_actions = DropletActions(access_token)
+        self.floating_ips = FloatingIPs(access_token)
         self.images = Images(access_token)
         self.regions = Regions(access_token)
         self.sizes = Sizes(access_token)
