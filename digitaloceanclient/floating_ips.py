@@ -22,18 +22,17 @@ class FloatingIPs(HttpClient):
         digitaloceanclient.exceptions.APIError
         """
 
-        return super().all(path='floating_ips',
-                           json_key='floating_ips')
+        return super().all(path='floating_ips')
 
     def create(self, droplet_id=None, region_slug=None):
         """
-        Create a new floating IP assigned to a Droplet.
+        Create a new floating IP assigned to a Droplet or reserved to a region.
 
         Parameters
         ----------
         droplet_id : str, optional
             The ID of the droplet that the floating IP will be assigned to.
-        regions_slug : str, optional
+        region_slug : str, optional
             The slug for the region the floating IP will be reserved to.
 
         Returns
@@ -45,7 +44,14 @@ class FloatingIPs(HttpClient):
         digitaloceanclient.exceptions.APIError
         """
 
-        raise NotImplementedError
+        if droplet_id is None and region_slug is None:
+            raise ValueError('Please specify droplet_id or region_slug.')
+        payload = {}
+        if droplet_id and len(payload) == 0:
+            payload['droplet_id'] = droplet_id
+        if region_slug and len(payload) == 0:
+            payload['region'] = region_slug
+        return super().create(path='floating_ips', payload=payload)
 
     def get(self, floating_ip_addr):
         """
@@ -65,7 +71,8 @@ class FloatingIPs(HttpClient):
         digitaloceanclient.exceptions.APIError
         """
 
-        raise NotImplementedError
+        return super().get(resource_id=floating_ip_addr, 
+                           path='floating_ips')
 
     def delete(self, floating_ip_addr):
         """
