@@ -36,10 +36,12 @@ def test_load_from_json():
 
     floating_ip = FloatingIP(data)
 
-    assert floating_ip.ip == data['ip']
-    assert floating_ip.droplet == data['droplet']
-    assert floating_ip.region.name == data['region']['name']
-    assert floating_ip.region.slug == data['region']['slug']
-    assert floating_ip.region.sizes == data['region']['sizes']
-    assert floating_ip.region.features == data['region']['features']
-    assert floating_ip.region.available == data['region']['available']
+
+def floating_ip_model_matches(a, b):
+    return a.ip == b['ip'] and \
+           a.droplet == b['droplet'] and \
+           a.region.name == b['region']['name'] and \
+           a.region.slug == b['region']['slug'] and \
+           a.region.sizes == b['region']['sizes'] and \
+           a.region.features == b['region']['features'] and \
+           a.region.available == b['region']['available']
