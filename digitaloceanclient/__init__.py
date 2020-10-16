@@ -11,6 +11,7 @@ from .exceptions import (
     ServerError, Unauthorized, UnprocessableEntity
 )
 from .floating_ips import FloatingIPs
+from .floating_ip_actions import FloatingIPActions
 from .images import Images
 from .regions import Regions
 from .sizes import Sizes
@@ -34,6 +35,7 @@ class DigitalOceanClient(object):
         self.droplets = Droplets(access_token)
         self.droplet_actions = DropletActions(access_token)
         self.floating_ips = FloatingIPs(access_token)
+        self.floating_ip_actions = FloatingIPActions(access_token)
         self.images = Images(access_token)
         self.regions = Regions(access_token)
         self.sizes = Sizes(access_token)
