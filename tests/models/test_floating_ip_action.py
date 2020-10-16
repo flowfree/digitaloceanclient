@@ -41,17 +41,20 @@ def test_load_from_json():
     }
 
     action = FloatingIPAction(data)
+    assert model_matches(action, data)
 
-    assert action.id == data['id']
-    assert action.status == data['status']
-    assert action.type == data['type']
-    assert action.started_at == data['started_at']
-    assert action.completed_at == data['completed_at']
-    assert action.resource_id == data['resource_id']
-    assert action.resource_type == data['resource_type']
-    assert action.region.name == data['region']['name']
-    assert action.region.slug == data['region']['slug']
-    assert action.region.sizes == data['region']['sizes']
-    assert action.region.features == data['region']['features']
-    assert action.region.available == data['region']['available']
-    assert action.region_slug == data['region_slug']
+
+def model_matches(a, b):
+    return a.id == b['id'] and \
+           a.status == b['status'] and \
+           a.type == b['type'] and \
+           a.started_at == b['started_at'] and \
+           a.completed_at == b['completed_at'] and \
+           a.resource_id == b['resource_id'] and \
+           a.resource_type == b['resource_type'] and \
+           a.region.name == b['region']['name'] and \
+           a.region.slug == b['region']['slug'] and \
+           a.region.sizes == b['region']['sizes'] and \
+           a.region.features == b['region']['features'] and \
+           a.region.available == b['region']['available'] and \
+           a.region_slug == b['region_slug'] 

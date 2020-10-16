@@ -53,3 +53,7 @@ class FloatingIPAction(Model):
             self.region = Region(data['region'])
         except (KeyError, TypeError):
             pass
+
+    @classmethod
+    def json_key(cls):
+        return 'action'
