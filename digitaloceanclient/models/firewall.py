@@ -15,16 +15,16 @@ class Firewall(Model):
     created_at : str
         When the Firewall was created.
     pending_changes : list
-        An array of objects each containing the fields "droplet_id", 
+        List of objects each containing the fields "droplet_id", 
         "removing", and "status". It is provided to detail exactly which 
         Droplets are having their security policies updated. When empty, 
         all changes have been successfully applied.
     name : str
         The name of the Firewall.
     inbound_rules : list
-        An object specifying the inbound access rules for a firewall.
+        List of objects specifying the inbound access rules for a firewall.
     outbound_rules : list
-        An object specifying the outbound access rules for a firewall.
+        List of objects specifying the outbound access rules for a firewall.
     droplet_ids : list
         List of droplets assigned to the Firewall.
     tags : list
