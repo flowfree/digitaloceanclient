@@ -9,6 +9,7 @@ from .domain import Domain
 from .domain_record import DomainRecord
 from .droplet import Droplet
 from .droplet_action import DropletAction
+from .firewall import Firewall
 from .floating_ip import FloatingIP
 from .floating_ip_action import FloatingIPAction
 from .image import Image
