@@ -1,8 +1,9 @@
 import json
 
 import pytest
-
 import responses
+
+from .models.test_image import model_matches
 
 
 @responses.activate
@@ -94,16 +95,7 @@ def test_create_an_image(client, load_json):
         'description': 'Cloud-optimized image w/ small footprint',
         'tags': ['base-image', 'prod']
     })
-    expected = json_response['image']
-    assert image.id == expected['id']
-    assert image.name == expected['name']
-    assert image.distribution == expected['distribution']
-    assert image.regions == expected['regions']
-    assert image.created_at == expected['created_at']
-    assert image.description == expected['description']
-    assert image.tags == expected['tags']
-    assert image.status == expected['status']
-    assert image.error_message == expected['error_message']
+    assert model_matches(image, json_response['image'])
 
 
 @responses.activate
@@ -116,21 +108,7 @@ def test_retrieve_a_single_image(client, load_json):
     )
 
     image = client.images.get('7555620')
-
-    expected = json_response['image']
-    assert image.id == expected['id']
-    assert image.name == expected['name']
-    assert image.distribution == expected['distribution']
-    assert image.slug == expected['slug']
-    assert image.public == expected['public']
-    assert image.regions == expected['regions']
-    assert image.created_at == expected['created_at']
-    assert image.min_disk_size == expected['min_disk_size']
-    assert image.size_gigabytes == expected['size_gigabytes']
-    assert image.description == expected['description']
-    assert image.tags == expected['tags']
-    assert image.status == expected['status']
-    assert image.error_message == expected['error_message']
+    assert model_matches(image, json_response['image'])
 
 
 @responses.activate
@@ -148,10 +126,7 @@ def test_retrieve_an_image_by_slug(client, load_json):
     assert responses.calls[0].request.method == 'GET'
     assert responses.calls[0].request.url == \
            'https://api.digitalocean.com/v2/images/sample-snapshot'
-
-    expected = json_response['image']
-    assert image.id == expected['id']
-    assert image.name == expected['name']
+    assert model_matches(image, json_response['image'])
 
 
 @responses.activate
@@ -182,21 +157,7 @@ def test_update_an_image(client, load_json):
 
     assert responses.calls[0].request.body.decode('utf-8') == \
            json.dumps({'name': 'new-image-name'})
-
-    expected = json_response['image']
-    assert image.id == expected['id']
-    assert image.name == expected['name']
-    assert image.distribution == expected['distribution']
-    assert image.slug == expected['slug']
-    assert image.public == expected['public']
-    assert image.regions == expected['regions']
-    assert image.created_at == expected['created_at']
-    assert image.min_disk_size == expected['min_disk_size']
-    assert image.size_gigabytes == expected['size_gigabytes']
-    assert image.description == expected['description']
-    assert image.tags == expected['tags']
-    assert image.status == expected['status']
-    assert image.error_message == expected['error_message']
+    assert model_matches(image, json_response['image'])
 
 
 @responses.activate
