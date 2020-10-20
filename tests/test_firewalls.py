@@ -192,7 +192,7 @@ def test_delete_firewall(client, load_json):
 
 
 @responses.activate
-def test_add_droplets_to_existing_firewall(client, load_json):
+def test_add_droplets_to_existing_firewall(client):
     responses.add(
         responses.POST,
         'https://api.digitalocean.com/v2/firewalls/bb4b2611-3d72-467b-8602-280330ecd65c/droplets',
@@ -205,4 +205,27 @@ def test_add_droplets_to_existing_firewall(client, load_json):
     assert responses.calls[0].request.method == 'POST'
     assert responses.calls[0].request.url == \
            'https://api.digitalocean.com/v2/firewalls/bb4b2611-3d72-467b-8602-280330ecd65c/droplets'
+    assert responses.calls[0].request.body.decode('utf-8') == json.dumps({
+        'droplet_ids': ['49696269']
+    })
+    assert response is None
+
+
+@responses.activate
+def test_remove_droplets_from_firewall(client):
+    responses.add(
+        responses.DELETE,
+        'https://api.digitalocean.com/v2/firewalls/bb4b2611-3d72-467b-8602-280330ecd65c/droplets',
+        status=204,
+    )
+
+    response = client.firewalls.remove_droplets(firewall_id='bb4b2611-3d72-467b-8602-280330ecd65c',
+                                                droplet_ids=['49696269'])
+    assert len(responses.calls) == 1
+    assert responses.calls[0].request.method == 'DELETE'
+    assert responses.calls[0].request.url == \
+           'https://api.digitalocean.com/v2/firewalls/bb4b2611-3d72-467b-8602-280330ecd65c/droplets'
+    assert responses.calls[0].request.body.decode('utf-8') == json.dumps({
+        'droplet_ids': ['49696269']
+    })
     assert response is None
