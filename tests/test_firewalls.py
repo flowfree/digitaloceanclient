@@ -229,3 +229,23 @@ def test_remove_droplets_from_firewall(client):
         'droplet_ids': ['49696269']
     })
     assert response is None
+
+
+@responses.activate
+def test_assign_tags_to_a_firewall(client):
+    responses.add(
+        responses.POST,
+        'https://api.digitalocean.com/v2/firewalls/bb4b2611-3d72-467b-8602-280330ecd65c/tags',
+        status=204,
+    )
+
+    response = client.firewalls.add_tags(firewall_id='bb4b2611-3d72-467b-8602-280330ecd65c',
+                                         tags=['frontend'])
+    assert len(responses.calls) == 1
+    assert responses.calls[0].request.method == 'POST'
+    assert responses.calls[0].request.url == \
+           'https://api.digitalocean.com/v2/firewalls/bb4b2611-3d72-467b-8602-280330ecd65c/tags'
+    assert responses.calls[0].request.body.decode('utf-8') == json.dumps({
+        'tags': ['frontend']
+    })
+    assert response is None

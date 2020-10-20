@@ -188,7 +188,9 @@ class Firewalls(HttpClient):
         digitaloceanclient.exceptions.APIError
         """
 
-        raise NotImplementedError
+        path = f'firewalls/{firewall_id}/tags'
+        payload = {'tags': tags}
+        return self._request('POST', path=path, payload=payload)
 
     def remove_tags(self, firewall_id, tags):
         """
