@@ -148,7 +148,9 @@ class Firewalls(HttpClient):
         digitaloceanclient.exceptions.APIError
         """
 
-        raise NotImplementedError
+        path = f'firewalls/{firewall_id}/droplets'
+        payload = {'droplet_ids': droplet_ids}
+        return self._request('POST', path=path, payload=payload)
 
     def remove_droplets(self, firewall_id, droplet_ids):
         """
