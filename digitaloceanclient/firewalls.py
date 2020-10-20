@@ -1,0 +1,235 @@
+from .http_client import HttpClient
+from .models import Firewall
+
+
+class Firewalls(HttpClient):
+    model = Firewall
+
+    def all(self):
+        """
+        List all Firewalls.
+
+        Yields
+        ------
+        digitaloceanclient.models.Firewall
+
+        Raises
+        ------
+        digitaloceanclient.exceptions.APIError
+        """
+
+        return super().all()
+
+    def create(self, name, inbound_rules, outbound_rules, 
+               droplet_ids=None, tags=None):
+        """
+        Create a new Firewall.
+
+        Parameters
+        ----------
+        name : str
+            The name of the Firewall.
+        inbound_rules : list of dict
+            Dictionaries specifying the inbound rules for the Firewall.
+        outbound_rules : list of dict
+            Dictionaries specifying the outbound rules for the Firewall.
+        droplet_ids : list, optional
+            List of droplet IDs to be assigned to the Firewall.
+        tags : list, optional
+            List of tags to be assigned to the Firewall.
+
+        Returns
+        -------
+        digitaloceanclient.models.Firewall
+
+        Raises
+        ------
+        digitaloceanclient.exceptions.APIError
+        """
+
+        payload = {
+            'name': name,
+            'inbound_rules': inbound_rules,
+            'outbound_rules': outbound_rules,
+        }
+        if droplet_ids:
+            payload['droplet_ids'] = droplet_ids
+
+        return super().create(payload=payload)
+
+    def get(self, firewall_id):
+        """
+        Retrieve an existing Firewall.
+
+        Parameters
+        ----------
+        firewall_id : str
+            The ID of the Firewall to retrieve.
+
+        Returns
+        -------
+        digitaloceanclient.models.Firewall
+
+        Raises
+        ------
+        digitaloceanclient.exceptions.APIError
+        """
+
+        raise NotImplementedError
+
+    def update(self, name, inbound_rules, outbound_rules,
+                     droplet_ids=None, tags=None):
+        """
+        Update a Firewall.
+
+        Parameters
+        ----------
+        name : str
+            The name of the Firewall.
+        inbound_rules : list of dict
+            Dictionaries specifying the inbound rules for the Firewall.
+        outbound_rules : list of dict
+            Dictionaries specifying the outbound rules for the Firewall.
+        droplet_ids : list, optional
+            List of droplet IDs to be assigned to the Firewall.
+        tags : list, optional
+            List of tags to be assigned to the Firewall.
+
+        Returns
+        -------
+        digitaloceanclient.models.Firewall
+
+        Raises
+        ------
+        digitaloceanclient.exceptions.APIError
+        """
+
+        raise NotImplementedError
+
+    def delete(self, firewall_id):
+        """
+        Delete a Firewall.
+
+        Parameters
+        ----------
+        firewall_id : str
+            The ID of the Firewall to retrieve.
+
+        Raises
+        ------
+        digitaloceanclient.exceptions.APIError
+        """
+
+        raise NotImplementedError
+
+    def add_droplets(self, firewall_id, droplet_ids):
+        """
+        Assign Droplets to a Firewall.
+
+        Parameters
+        ----------
+        firewall_id : str
+            The ID of the Firewall.
+        droplet_ids : list
+            List of Droplet IDs to be assigned to the Firewall.
+
+        Raises
+        ------
+        digitaloceanclient.exceptions.APIError
+        """
+
+        raise NotImplementedError
+
+    def remove_droplets(self, firewall_id, droplet_ids):
+        """
+        Remove Droplets from a Firewall.
+
+        Parameters
+        ----------
+        firewall_id : str
+            The ID of the Firewall.
+        droplet_ids : list
+            List of Droplet IDs to be removed from the Firewall.
+
+        Raises
+        ------
+        digitaloceanclient.exceptions.APIError
+        """
+
+        raise NotImplementedError
+
+    def add_tags(self, firewall_id, tags):
+        """
+        Assign tags to a Firewall.
+
+        Parameters
+        ----------
+        firewall_id : str
+            The ID of the Firewall.
+        tags : list
+            List of tags to be assigned to the Firewall.
+
+        Raises
+        ------
+        digitaloceanclient.exceptions.APIError
+        """
+
+        raise NotImplementedError
+
+    def remove_tags(self, firewall_id, tags):
+        """
+        Remove tags from a Firewall.
+
+        Parameters
+        ----------
+        firewall_id : str
+            The ID of the Firewall.
+        tags : list
+            List of tags to be assigned to the Firewall.
+
+        Raises
+        ------
+        digitaloceanclient.exceptions.APIError
+        """
+
+        raise NotImplementedError
+
+    def add_rules(self, firewall_id, inbound_rules=None, outbound_rules=None):
+        """
+        Add additional access rules to a Firewall.
+
+        Parameters
+        ----------
+        firewall_id : str
+            The ID of the Firewall.
+        inbound_rules : list of dict, optional
+            Dictionaries of the inbound rules for the Firewall.
+        outbound_rules : list of dict, optional
+            Dictionaries of the outbound rules for the Firewall.
+
+        Raises
+        ------
+        digitaloceanclient.exceptions.APIError
+        """
+
+        raise NotImplementedError
+
+    def remove_rules(self, firewall_id, inbound_rules=None, outbound_rules=None):
+        """
+        Remove existing access rules from a Firewall.
+
+        Parameters
+        ----------
+        firewall_id : str
+            The ID of the Firewall.
+        inbound_rules : list of dict, optional
+            Dictionaries of the inbound rules to be removed from the Firewall.
+        outbound_rules : list of dict, optional
+            Dictionaries of the outbound rules to be removed from the Firewall.
+
+        Raises
+        ------
+        digitaloceanclient.exceptions.APIError
+        """
+
+        raise NotImplementedError
