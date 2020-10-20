@@ -170,3 +170,19 @@ class Images(HttpClient):
         if distribution:
             payload['distribution'] = distribution
         return super().update(image_id, payload=payload)
+
+    def delete(self, image_id):
+        """
+        Retrieve an image by ID or slug.
+
+        Parameters
+        ----------
+        image_id : str
+            The ID of the specified image.
+
+        Raises
+        ------
+        digitaloceanclient.exceptions.APIError
+        """
+
+        return super().delete(resource_id=image_id)
