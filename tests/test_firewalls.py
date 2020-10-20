@@ -269,3 +269,57 @@ def test_remove_tags_from_firewall(client):
         'tags': ['frontend']
     })
     assert response is None
+
+
+@responses.activate
+def test_add_additional_rules_to_firewall(client):
+    firewall_id = 'bb4b2611-3d72-467b-8602-280330ecd65c'
+
+    with pytest.raises(ValueError) as e:
+        client.firewalls.add_rules(firewall_id=firewall_id)
+
+    responses.add(
+        responses.POST,
+        'https://api.digitalocean.com/v2/firewalls/bb4b2611-3d72-467b-8602-280330ecd65c/rules',
+        status=204,
+    )
+
+    inbound_rules = [{
+        "protocol": "tcp",
+        "ports": "3306",
+        "sources": {"droplet_ids": [49696269]}
+    }]
+    response = client.firewalls.add_rules(firewall_id=firewall_id,
+                                          inbound_rules=inbound_rules)
+
+    assert responses.calls[-1].request.method == 'POST'
+    assert responses.calls[-1].request.url == \
+           'https://api.digitalocean.com/v2/firewalls/bb4b2611-3d72-467b-8602-280330ecd65c/rules'
+    assert responses.calls[-1].request.body.decode('utf-8') == json.dumps({
+        'inbound_rules': [{
+            "protocol": "tcp",
+            "ports": "3306",
+            "sources": {"droplet_ids": [49696269]}
+        }]
+    })
+    assert response is None
+
+    outbound_rules = [{
+        "protocol": "tcp",
+        "ports": "3306",
+        "destinations": {"droplet_ids": [49696269]}
+    }]
+    response = client.firewalls.add_rules(firewall_id=firewall_id,
+                                          outbound_rules=outbound_rules)
+
+    assert responses.calls[-1].request.method == 'POST'
+    assert responses.calls[-1].request.url == \
+           'https://api.digitalocean.com/v2/firewalls/bb4b2611-3d72-467b-8602-280330ecd65c/rules'
+    assert responses.calls[-1].request.body.decode('utf-8') == json.dumps({
+        'outbound_rules': [{
+            "protocol": "tcp",
+            "ports": "3306",
+            "destinations": {"droplet_ids": [49696269]}
+        }]
+    })
+    assert response is None
