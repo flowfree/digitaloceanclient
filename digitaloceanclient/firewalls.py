@@ -75,7 +75,7 @@ class Firewalls(HttpClient):
         digitaloceanclient.exceptions.APIError
         """
 
-        raise NotImplementedError
+        return super().get(resource_id=firewall_id)
 
     def update(self, name, inbound_rules, outbound_rules,
                      droplet_ids=None, tags=None):

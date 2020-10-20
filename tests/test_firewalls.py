@@ -88,3 +88,22 @@ def test_create_new_firewall(client, load_json):
         }],
         "droplet_ids": [8043964]
     })
+
+
+@responses.activate
+def test_retrieve_existing_firewall(client, load_json):
+    json_response = load_json('firewall_single.json')
+    responses.add(
+        responses.GET,
+        'https://api.digitalocean.com/v2/firewalls/bb4b2611-3d72-467b-8602-280330ecd65c',
+        json=json_response,
+        status=200,
+    )
+
+    firewall = client.firewalls.get('bb4b2611-3d72-467b-8602-280330ecd65c')
+
+    assert len(responses.calls) == 1
+    assert responses.calls[0].request.method == 'GET'
+    assert responses.calls[0].request.url == \
+           'https://api.digitalocean.com/v2/firewalls/bb4b2611-3d72-467b-8602-280330ecd65c'
+    assert model_matches(firewall, json_response['firewall'])
