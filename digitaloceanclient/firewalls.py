@@ -3,6 +3,10 @@ from .models import Firewall
 
 
 class Firewalls(HttpClient):
+    """
+    Create, retrieve, update, and delete Firewalls.
+    """
+
     model = Firewall
 
     def all(self):
@@ -258,4 +262,12 @@ class Firewalls(HttpClient):
         digitaloceanclient.exceptions.APIError
         """
 
-        raise NotImplementedError
+        if inbound_rules is None and outbound_rules is None:
+            raise ValueError('Please specify inbound_rules or outbound_rules.')
+        payload = {}
+        if inbound_rules:
+            payload['inbound_rules'] = inbound_rules
+        if outbound_rules:
+            payload['outbound_rules'] = outbound_rules
+        path = f'firewalls/{firewall_id}/rules'
+        return self._request('DELETE', path=path, payload=payload)
