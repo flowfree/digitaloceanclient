@@ -77,13 +77,15 @@ class Firewalls(HttpClient):
 
         return super().get(resource_id=firewall_id)
 
-    def update(self, name, inbound_rules, outbound_rules,
+    def update(self, name, firewall_id, inbound_rules, outbound_rules,
                      droplet_ids=None, tags=None):
         """
         Update a Firewall.
 
         Parameters
         ----------
+        firewall_id : str
+            The ID of the Firewall to be updated.
         name : str
             The name of the Firewall.
         inbound_rules : list of dict
@@ -104,7 +106,15 @@ class Firewalls(HttpClient):
         digitaloceanclient.exceptions.APIError
         """
 
-        raise NotImplementedError
+        payload = {
+            'name': name,
+            'inbound_rules': inbound_rules,
+            'outbound_rules': outbound_rules,
+        }
+        if droplet_ids:
+            payload['droplet_ids'] = droplet_ids
+
+        return super().update(resource_id=firewall_id, payload=payload)
 
     def delete(self, firewall_id):
         """
