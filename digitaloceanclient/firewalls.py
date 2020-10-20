@@ -130,7 +130,7 @@ class Firewalls(HttpClient):
         digitaloceanclient.exceptions.APIError
         """
 
-        raise NotImplementedError
+        return super().delete(resource_id=firewall_id)
 
     def add_droplets(self, firewall_id, droplet_ids):
         """

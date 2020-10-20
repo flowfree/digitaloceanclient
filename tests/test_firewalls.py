@@ -172,3 +172,20 @@ def test_update_existing_firewall(client, load_json):
         }],
         "droplet_ids": [8043964]
     })
+
+
+@responses.activate
+def test_delete_firewall(client, load_json):
+    responses.add(
+        responses.DELETE,
+        'https://api.digitalocean.com/v2/firewalls/bb4b2611-3d72-467b-8602-280330ecd65c',
+        status=204,
+    )
+
+    response = client.firewalls.delete('bb4b2611-3d72-467b-8602-280330ecd65c')
+
+    assert len(responses.calls) == 1
+    assert responses.calls[0].request.method == 'DELETE'
+    assert responses.calls[0].request.url == \
+           'https://api.digitalocean.com/v2/firewalls/bb4b2611-3d72-467b-8602-280330ecd65c'
+    assert response is None
